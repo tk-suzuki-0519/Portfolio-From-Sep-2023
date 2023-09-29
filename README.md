@@ -1,9 +1,11 @@
 # Portfolio-From-Sep-2023
 
 :::note warn
-このPortfolioの作成目的
-:::
 
+このPortfolioの作成目的
+
+:::
+  
 # 目次
 1. 技術選定
     1. クラウドインフラ
@@ -21,14 +23,14 @@
   
 ---------------------------------------
 # 技術選定
-## 技術選定　＞　クラウドインフラ＞クラウド基盤共通
+## 技術選定　＞　クラウドインフラ　＞　クラウド基盤共通
 IaC）Terraform Cloud  
 主要サービス）ECS-Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, IAM, S3, CloudFront, WAF, CloudWatch log, Route53, CloudTrail, VPC Flow Logs, AWS Config, KMS, Athena, AWS Shield Standard, Amazon Inspector, Guard Duty, Trusted Advisor
   
-## 技術選定　＞　クラウドインフラ＞サーバレス環境
+## 技術選定　＞　クラウドインフラ　＞　サーバレス環境
 Python 3.11.5 (サーバレス環境およびデータ分析基盤の構築用)
   
-## 技術選定　＞　クラウドインフラ＞データ分析基盤
+## 技術選定　＞　クラウドインフラ　＞　データ分析基盤
 
   
 ## 技術選定　＞　開発ツール
