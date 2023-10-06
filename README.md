@@ -1,8 +1,8 @@
 # Portfolio-From-Sep-2023
 > [!IMPORTANT]
-> このPortfolioを通して伝えたいアピールポイント
+> **アピールポイント**  
 > このアプリケーションは、Terraform Cloudで最先端のIaC技術を使用しデザインされています。環境の再現性、迅速な構築、そして一貫性のある変更管理により、ビジネスの変化や要件の変動に柔軟に対応します。  
-> アプリケーション実行環境としてECS-Fargateを採用し、リソースの伸縮や管理の手間を大幅に削減しつつ、トラフィックの変動に応じて自動的にスケーリングします。  
+> アプリケーション実行環境としてECS on Fargateを採用し、リソースの伸縮や管理の手間を大幅に削減しつつ、トラフィックの変動に応じて自動的にスケーリングします。  
 > 最後にこのクラウド基盤は、個人開発経験と実務経験をベースに構築されています。私はこの技術力と経験を活かし、ビジネスの成長と変化に柔軟に対応する強固な基盤を構築することができます。  
 > **（＊）この文言は、トップページの生成AIで作成した動画アバターのスクリプトとしても使用**
   
@@ -32,7 +32,7 @@
 IaC）Terraform Cloud  
 管理コンソールから作成したサービス）
   
-IaCで作成したサービス）ECS-Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, IAM, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, Trusted Advisor, 
+IaCで作成したサービス）ECS on Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, IAM, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, Trusted Advisor, 
   
 初期設定で使用が有効で、継続使用を判断したサービス）CloudTrail, AWS Shield Standard, 
   
