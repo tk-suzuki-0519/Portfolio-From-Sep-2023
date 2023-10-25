@@ -1,4 +1,4 @@
-# Portfolio-From-Sep-2023
+# :fire:Portfolio-From-Sep-2023:fire:
 > [!IMPORTANT]
 > **アピールポイント（この文言は、トップページの生成AIで作成した動画アバターのスクリプトとしても使用）**
 >   このアプリケーションは、Terraform Cloudで最先端のIaC技術を使用しデザインされています。環境の再現性、迅速な構築、そして一貫性のある変更管理により、ビジネスの変化や要件の変動に柔軟に対応します。
@@ -7,7 +7,7 @@
   
 > [!NOTE]
 > **想定閲覧者**
->   このREADME.mdに記載されている基本設計書は、顧客ではなく技術者を想定閲覧者として作成されています。
+  > このREADME.mdに記載されている基本設計書は、顧客ではなく技術者を想定閲覧者として作成されています。
 >   したがって、例えば基本設計書内の「セキュリティ設計」の部分にIAMの具体的なセキュリティ機能の説明は冗長的になるため省き、技術選定欄にサービス名としてIAMと記載するに留めることで想定閲覧者の文章を読む負担を軽減するように設計されています。
   
 # 目次
@@ -38,11 +38,11 @@
 ## 技術選定／クラウドインフラ
 ### 技術選定／クラウドインフラ／クラウド基盤共通
 + IaC）  Terraform Cloud
-+ 管理コンソールから作成・有効化したサービス）  IAM, AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
++ 管理コンソールから作成・有効化したサービス・機能）  IAM, AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
   
-+ IaCで作成したサービス）  ECS on Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
++ IaCで作成したサービス・機能）  ECS on Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
   
-+ 初期設定で有効化されているサービス）  CloudTrail, AWS Shield Standard, AWS Health Dashboard, (コスト系も入れる), 
++ 初期設定で有効化されているサービス・機能）  CloudTrail, AWS Shield Standard, AWS Health Dashboard, (コスト系も入れる), 
   
 ### 技術選定／クラウドインフラ／サーバレス環境
 + Python 3.11.5 (サーバレス環境およびデータ分析基盤の構築用)
@@ -86,8 +86,8 @@
 + ユーザー登録、ログイン
   
 ## 基本設計／データベース
-+ テーブル設計（簡易版）
-  ER図  
++ テーブル設計（簡易版）  
+ER図  
   
 ---------------------------------------
 # :fire:その他
