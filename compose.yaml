@@ -28,12 +28,12 @@ services:
       - "db"
 
   db:
-    image: mysql:8.1.0
+    image: mysql:8.0.34
     container_name: mysql
     environment:
       - MYSQL_DATABASE=mysql
-      - MYSQL_PASSWORD=Fasd412@
-      - MYSQL_ROOT_PASSWORD=Fasd412@
+      - MYSQL_PASSWORD=Dev@1234
+      - MYSQL_ROOT_PASSWORD=Dev@1234
       - TZ=Asia/Tokyo
     ports:
       - 3306:3306
