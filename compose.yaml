@@ -1,0 +1,42 @@
+# docker-compose.yml 名称が非推奨になった
+# https://docs.docker.jp/compose/compose-file/index.html#id69
+# version指定がオプションになった
+# https://docs.docker.com/compose/compose-file/04-version-and-name/
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:1.25.3
+    ports:
+      - 80:80
+    depends_on:
+      - php
+    volumes:
+      - ./app:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+  php:
+    container_name: php
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./app:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    depends_on:
+      - "db"
+
+  db:
+    image: mysql:8.0.34
+    container_name: mysql
+    environment:
+      - MYSQL_DATABASE=mysql
+      - MYSQL_PASSWORD=Dev@1234
+      - MYSQL_ROOT_PASSWORD=Dev@1234
+      - TZ=Asia/Tokyo
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/db/mysql:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
