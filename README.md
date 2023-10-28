@@ -38,11 +38,20 @@
 ## 技術選定／クラウドインフラ
 ### 技術選定／クラウドインフラ／クラウド基盤共通
 + IaC）  Terraform Cloud
+  
++ 管理コンソールから作成・有効化したサービス・機能）  IAM, 
+  
++ IaCで作成したサービス・機能）  
+  
++ 初期設定で有効化されているサービス・機能）  
+  
+
+
+<!-- 
 + 管理コンソールから作成・有効化したサービス・機能）  IAM, AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
-  
 + IaCで作成したサービス・機能）  ECS on Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
-  
 + 初期設定で有効化されているサービス・機能）  CloudTrail, AWS Shield Standard, AWS Health Dashboard, (コスト系も入れる), 
+-->
   
 ### 技術選定／クラウドインフラ／サーバレス環境
 + Python 3.11.5 (サーバレス環境およびデータ分析基盤の構築用)
@@ -53,6 +62,7 @@
 ## 技術選定／開発ツール
 + Docker Desktop 4.24.2
 + aws-cli 2.13.27(オートコンプリート)
++ Terraform v1.6.2
 + pyenv 2.3.27
   
 ## 技術選定／バックエンド
