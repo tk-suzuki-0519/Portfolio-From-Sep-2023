@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "Portfolio-From-Sep-2023"
     workspaces {
-      name = "infra"
+      name = "terraform-envs-main_region"
     }
   }
   required_providers {
