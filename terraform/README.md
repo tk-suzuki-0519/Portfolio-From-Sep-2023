@@ -4,3 +4,4 @@
 + version.tf
 + provider.tf
 + outputs.tf
++ variables.tf
