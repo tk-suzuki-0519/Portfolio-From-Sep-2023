@@ -1,9 +1,9 @@
 # -----------------------------------
 # VPC
 # -----------------------------------
-resource "aws_vpc" "prod_vpc" {
+resource "aws_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "prod_vpc"
+    Name = var.env_name + "_vpc"
   }
 }
