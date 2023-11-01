@@ -3,7 +3,7 @@
 # VPC
 # -----------------------------------
 resource "aws_vpc" "vpc" {
-  cidr_block = "172.16.0.0/12"
+  cidr_block = "172.30.0.0/16"
   tags = {
     Name = format("%s_vpc", var.env_name)
   }
@@ -14,9 +14,9 @@ resource "aws_vpc" "vpc" {
 # public subnets
 resource "aws_subnet" "public_subnet" {
   for_each = {
-    "172.16.1.0/24"  = "ap-northeast-1a"
-    "172.16.17.0/24" = "ap-northeast-1c"
-    "172.16.33.0/24" = "ap-northeast-1d"
+    "172.30.1.0/24"  = "ap-northeast-1a"
+    "172.30.17.0/24" = "ap-northeast-1c"
+    "172.30.33.0/24" = "ap-northeast-1d"
   }
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = each.key
@@ -28,12 +28,12 @@ resource "aws_subnet" "public_subnet" {
 # private subnets
 resource "aws_subnet" "private_subnet" {
   for_each = {
-    "172.17.1.0/24"  = "ap-northeast-1a"
-    "172.17.2.0/24"  = "ap-northeast-1a"
-    "172.17.17.0/24" = "ap-northeast-1c"
-    "172.17.18.0/24" = "ap-northeast-1c"
-    "172.17.33.0/24" = "ap-northeast-1d"
-    "172.17.34.0/24" = "ap-northeast-1d"
+    "172.30.2.0/24"  = "ap-northeast-1a"
+    "172.30.3.0/24"  = "ap-northeast-1a"
+    "172.30.18.0/24" = "ap-northeast-1c"
+    "172.30.19.0/24" = "ap-northeast-1c"
+    "172.30.34.0/24" = "ap-northeast-1d"
+    "172.30.35.0/24" = "ap-northeast-1d"
   }
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = each.key
