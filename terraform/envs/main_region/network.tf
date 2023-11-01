@@ -53,14 +53,18 @@ resource "aws_subnet" "private_subnet" {
 # a route table
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
-
   tags = {
     Name = format("%s_public_rt", var.env_name)
   }
 }
 resource "aws_route_table_association" "public_rta" {
   route_table_id = aws_route_table.public_rt.id
-  subnet_id      = aws_subnet.public_subnet[each.value].id
+  for_each = {
+    "172.30.1.0/24"  = "ap-northeast-1a"
+    "172.30.17.0/24" = "ap-northeast-1c"
+    "172.30.33.0/24" = "ap-northeast-1d"
+  }
+  subnet_id = aws_subnet.public_subnet[each.key].id
 }
 # -----------------------------------
 # Internet gateway
