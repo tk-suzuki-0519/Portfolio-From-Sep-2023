@@ -3,7 +3,10 @@
 # VPC
 # -----------------------------------
 resource "aws_vpc" "vpc" {
-  cidr_block = "172.30.0.0/16"
+  cidr_block                       = "172.30.0.0/16"
+  enable_dns_hostnames             = true # VPC内のインスタンスがDNSホスト名を取得する。またAWSサービス間での通信を可能にする場合がある。
+  enable_dns_support               = true # デフォルトでtrueだが指定。VPC内でのサービス間の通信に必須。
+  assign_generated_ipv6_cidr_block = false
   tags = {
     Name = format("%s_vpc", var.env_name)
   }
@@ -18,11 +21,12 @@ resource "aws_subnet" "public_subnet" {
     "172.30.17.0/24" = "ap-northeast-1c"
     "172.30.33.0/24" = "ap-northeast-1d"
   }
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = each.key
-  availability_zone = each.value
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = each.key
+  availability_zone       = each.value
+  map_public_ip_on_launch = true
   tags = {
-    Name = format("%s_public_subnet_%s", var.env_name, each.value)
+    Name = format("%s_public_%s", var.env_name, each.value)
   }
 }
 # private subnets
@@ -35,11 +39,12 @@ resource "aws_subnet" "private_subnet" {
     "172.30.34.0/24" = "ap-northeast-1d"
     "172.30.35.0/24" = "ap-northeast-1d"
   }
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = each.key
-  availability_zone = each.value
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = each.key
+  availability_zone       = each.value
+  map_public_ip_on_launch = false
   tags = {
-    Name = format("%s_private_subnet_%s", var.env_name, each.value)
+    Name = format("%s_private_%s", var.env_name, each.value)
   }
 }
 # -----------------------------------
