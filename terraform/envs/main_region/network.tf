@@ -50,7 +50,7 @@ resource "aws_subnet" "private_subnet" {
 # -----------------------------------
 # Route tables
 # -----------------------------------
-# a route table
+# a public route table
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
