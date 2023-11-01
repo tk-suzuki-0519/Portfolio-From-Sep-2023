@@ -1,4 +1,4 @@
 output "vpc_id" {
-  description = "ID of project VPC"
-  value       = aws_vpc.prod_vpc.id
+  description = "VPC name"
+  value       = aws_vpc.vpc.id
 }
