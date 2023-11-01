@@ -50,10 +50,29 @@ resource "aws_subnet" "private_subnet" {
 # -----------------------------------
 # Route tables
 # -----------------------------------
-# a route 
+# a route table
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.vpc.id
 
-
-
+  tags = {
+    Name = format("%s_public_rt", var.env_name)
+  }
+}
+resource "aws_route_table_association" "public_rta" {
+  route_table_id = aws_route_table.public_rt.id
+  subnet_id      = aws_subnet.public_subnet[each.value].id
+}
 # -----------------------------------
 # Internet gateway
 # -----------------------------------
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = format("%s_igw", var.env_name)
+  }
+}
+resource "aws_route" "public_rt_igw_r" {
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+  route_table_id         = aws_route_table.public_rt.id
+}
