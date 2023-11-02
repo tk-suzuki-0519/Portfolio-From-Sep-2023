@@ -37,7 +37,7 @@ resource "aws_vpc_security_group_egress_rule" "web_sg_out_all" { # 今後の拡�
 }
 # fargate sg
 resource "aws_security_group" "fargate_sg" {
-  name        = format("%s_sg_fargate", var.env_name)
+  name        = format("%s_sg_fargate_v2_test", var.env_name)
   vpc_id      = aws_vpc.vpc.id
   description = "sg"
   tags = {
