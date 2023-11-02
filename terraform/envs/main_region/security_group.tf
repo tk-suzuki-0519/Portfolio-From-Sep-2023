@@ -50,7 +50,7 @@ resource "aws_vpc_security_group_ingress_rule" "fargate_sg_in_http" {
   from_port                    = 80
   to_port                      = 80
   ip_protocol                  = "tcp"
-  referenced_security_group_id = aws.security_group_id.web_sg.id
+  referenced_security_group_id = aws_security_group.web_sg.id
 }
 # TODO Systems Managerからのingressを後々必要になった時に追記する。
 # TODO ECS on Fargateの実装時の原因切り分けを容易にするため、下記で一旦Fargateのプライベートサブネットのegress通信を全て許可する。実装完了後、想定されている通信のみegress許可する。現在想定：DBとS3への通信。
