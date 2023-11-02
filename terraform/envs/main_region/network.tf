@@ -48,14 +48,28 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 # -----------------------------------
+# Internet gateway
+# -----------------------------------
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = format("%s_igw", var.env_name)
+  }
+}
+# -----------------------------------
 # Route tables
 # -----------------------------------
-# a public route table
+# a route table on public subnets to a Internet gateway
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name = format("%s_public_rt", var.env_name)
   }
+}
+resource "aws_route" "public_to_igw_r" {
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+  route_table_id         = aws_route_table.public_rt.id
 }
 resource "aws_route_table_association" "public_rta" {
   route_table_id = aws_route_table.public_rt.id
@@ -66,17 +80,22 @@ resource "aws_route_table_association" "public_rta" {
   }
   subnet_id = aws_subnet.public_subnet[each.key].id
 }
-# -----------------------------------
-# Internet gateway
-# -----------------------------------
-resource "aws_internet_gateway" "igw" {
+# a route table on private subnets without a route just to disuse default route table 
+resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = format("%s_igw", var.env_name)
+    Name = format("%s_private_rt", var.env_name)
   }
 }
-resource "aws_route" "public_rt_igw_r" {
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.igw.id
-  route_table_id         = aws_route_table.public_rt.id
+resource "aws_route_table_association" "private_rta" {
+  route_table_id = aws_route_table.private_rt.id
+  for_each = {
+    "172.30.2.0/24"  = "ap-northeast-1a"
+    "172.30.3.0/24"  = "ap-northeast-1a"
+    "172.30.18.0/24" = "ap-northeast-1c"
+    "172.30.19.0/24" = "ap-northeast-1c"
+    "172.30.34.0/24" = "ap-northeast-1d"
+    "172.30.35.0/24" = "ap-northeast-1d"
+  }
+  subnet_id = aws_subnet.private_subnet[each.key].id
 }
