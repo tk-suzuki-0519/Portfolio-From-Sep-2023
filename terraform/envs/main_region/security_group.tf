@@ -32,7 +32,7 @@ resource "aws_vpc_security_group_egress_rule" "web_sg_out_all" { # 今後の拡�
   security_group_id = aws_security_group.web_sg.id
   from_port         = 0
   to_port           = 0
-  ip_protocol       = "-1"
+  ip_protocol       = "tcp" # 仕様上、ここを"-1"にするとエラーになる。(ポートとプロトコルを同時に全て開放できない模様。)
   cidr_ipv4         = "0.0.0.0/0"
 }
 # fargate sg
@@ -58,12 +58,12 @@ resource "aws_vpc_security_group_egress_rule" "fargate_sg_out_all" {
   security_group_id = aws_security_group.fargate_sg.id
   from_port         = 0
   to_port           = 0
-  ip_protocol       = "-1"
+  ip_protocol       = "tcp" # 仕様上、ここを"-1"にするとエラーになる。(ポートとプロトコルを同時に全て開放できない模様。)
   cidr_ipv4         = "0.0.0.0/0"
 }
 # db sg
 resource "aws_security_group" "db_sg" {
-  name        = format("%s_sg_fargate", var.env_name)
+  name        = format("%s_sg_db", var.env_name)
   vpc_id      = aws_vpc.vpc.id
   description = "sg"
   tags = {
@@ -80,10 +80,3 @@ resource "aws_vpc_security_group_ingress_rule" "db_sg_in_tcp3306" {
 }
 # db sgrでは、fargateへの通信を許可するegressルールは追加しない。
 # 理由 デフォルトでegreeルールは全て許可だが、何かしらのセキュリティグループを作成した段階でegressルールは仕様で全て拒否になる。この拒否ルールはDBサブネットで想定された設定。また、ingressでfargateからの通信は許可しているため、ステートフルの観点からfargateへの応答通信は成立し、問題がないため。
-resource "aws_vpc_security_group_egress_rule" "db_sg_out_fargate" { # fargateへの通信のみ許可。
-  security_group_id            = aws_security_group.db_sg.id
-  from_port                    = 0
-  to_port                      = 0
-  ip_protocol                  = "tcp"
-  referenced_security_group_id = aws_security_group.fargate_sg.id
-}
