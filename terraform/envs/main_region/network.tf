@@ -80,7 +80,7 @@ resource "aws_route_table_association" "public_rta" {
   }
   subnet_id = aws_subnet.public_subnet[each.key].id
 }
-# a route table on private subnets without a route just to disuse default route table 
+# a route table on private subnets just to disuse default route table 
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
@@ -98,9 +98,4 @@ resource "aws_route_table_association" "private_rta" {
     "172.30.35.0/24" = "ap-northeast-1d"
   }
   subnet_id = aws_subnet.private_subnet[each.key].id
-}
-# create a new default route table on VPC just to disuse a default route table 
-resource "aws_main_route_table_association" "main_rt_table" {
-  vpc_id         = aws_vpc.vpc.id
-  route_table_id = aws_route_table.public_rt.id
 }
