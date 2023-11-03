@@ -34,7 +34,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "public_assets" {
   }
 }
 resource "aws_s3_bucket_policy" "public_assets_policy" {
-  bucket = aws_s3_bucket.public_assets_policy.id
+  bucket = aws_s3_bucket.public_assets.id
   policy = data.aws_iam_policy_document.allow_access_from_public.json
 }
 data "aws_iam_policy_document" "allow_access_from_public" {
