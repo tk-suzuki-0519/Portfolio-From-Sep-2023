@@ -12,9 +12,9 @@ resource "random_id" "s3" {
 }
 # public bucket
 resource "aws_s3_bucket" "public_assets" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
-  bucket = format("%s_public_assets_%s", var.env_name, random_id.s3.hex)
+  bucket = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
   tags = {
-    Name = format("%s_public_assets_%s", var.env_name, random_id.s3.hex)
+    Name = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
   }
 }
 resource "aws_s3_bucket_versioning" "public_assets_versioning" {
