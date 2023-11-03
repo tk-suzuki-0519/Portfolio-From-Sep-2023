@@ -52,11 +52,32 @@ data "aws_iam_policy_document" "allow_access_from_public" {
     ]
   }
 }
+# TODO ドメインが確定したらCORSの設定を行う
+/*
+resource "aws_s3_bucket_cors_configuration" "public_assets_cors" {
+  bucket = aws_s3_bucket.public_assets_cors.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["https://domainname.com", "http://localhost:port"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
+}
+*/
+
+
 # private bucket
 # loopを防ぐ実装を行う
 /*
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object
-上記方法でも暗号化ができる。どちらにするか検討する。上の方法だとserver_side_encryption 属性を付与している。
+上記方法でも暗号化ができる。どちらにするか検討する。上の方法だとserver_side_encryption 属性を付与している。ただ、S3はデフォルトでも暗号化されている
 resource "aws_s3_bucket_server_side_encryption_configuration" "private_admin" {
   bucket = aws_s3_bucket.private_admin.id
   rule {

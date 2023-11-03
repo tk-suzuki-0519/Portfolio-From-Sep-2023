@@ -59,7 +59,7 @@
   
   
 ## 技術選定／開発ツール
-+ Docker Desktop 4.24.2
++ Docker Desktop 4.25.0
 + aws-cli 2.13.27(オートコンプリート)
 + Terraform v1.6.2(CLI環境)
 + pyenv 2.3.27
