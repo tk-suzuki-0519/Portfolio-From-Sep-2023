@@ -30,12 +30,15 @@ resource "aws_s3_bucket_public_access_block" "public_ab" {
   ignore_public_acls      = true
   restrict_public_buckets = false
   depends_on = [
-    aws_s3_bucket_policy.public_assets_policy
+    aws_s3_bucket.public_assets
   ]
 }
 resource "aws_s3_bucket_policy" "public_assets_policy" {
   bucket = aws_s3_bucket.public_assets.id
   policy = data.aws_iam_policy_document.allow_access_from_public.json
+  depends_on = [
+    aws_s3_bucket_public_access_block.public_ab
+  ]
 }
 data "aws_iam_policy_document" "allow_access_from_public" {
   statement {
