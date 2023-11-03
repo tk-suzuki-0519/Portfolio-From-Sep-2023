@@ -23,6 +23,16 @@ resource "aws_s3_bucket_versioning" "public_assets_versioning" {
     status = "Disabled"
   }
 }
+resource "aws_s3_bucket_public_access_block" "public_ab" {
+  bucket                  = aws_s3_bucket.public_assets.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = false
+  depends_on = [
+    aws_s3_bucket_policy.public_assets_policy
+  ]
+}
 resource "aws_s3_bucket_policy" "public_assets_policy" {
   bucket = aws_s3_bucket.public_assets.id
   policy = data.aws_iam_policy_document.allow_access_from_public.json
