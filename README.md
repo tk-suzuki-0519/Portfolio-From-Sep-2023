@@ -41,7 +41,7 @@
   
 + 管理コンソールから作成・有効化したサービス・機能）  IAM, 
   
-+ IaCで作成したサービス・機能）  
++ IaCで作成したサービス・機能）  Amazon S3, 
   
 + 初期設定で有効化されているサービス・機能）  
   
@@ -49,7 +49,7 @@
 
 <!-- 
 + 管理コンソールから作成・有効化したサービス・機能）  IAM, AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
-+ IaCで作成したサービス・機能）  ECS on Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
++ IaCで作成したサービス・機能）  ECS on Fargate, RDS, ECR, ACM, ALB, VPC（IPv4）, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
 + 初期設定で有効化されているサービス・機能）  CloudTrail, AWS Shield Standard, AWS Health Dashboard, (コスト系も入れる), 
 -->
   
