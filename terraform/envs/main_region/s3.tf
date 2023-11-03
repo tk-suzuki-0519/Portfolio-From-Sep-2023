@@ -23,16 +23,6 @@ resource "aws_s3_bucket_versioning" "public_assets_versioning" {
     status = "Disabled"
   }
 }
-resource "aws_s3_bucket_lifecycle_configuration" "public_assets" {
-  bucket = aws_s3_bucket.public_assets.id
-  rule {
-    id     = "public_assets"
-    status = "Enabled"
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。
-      prefix = ""
-    }
-  }
-}
 resource "aws_s3_bucket_policy" "public_assets_policy" {
   bucket = aws_s3_bucket.public_assets.id
   policy = data.aws_iam_policy_document.allow_access_from_public.json
@@ -47,17 +37,11 @@ data "aws_iam_policy_document" "allow_access_from_public" {
       "S3:GetObject",
     ]
     resources = [
-      aws_s3_bucket.public_assets.arn
+      aws_s3_bucket.public_assets.arn,
+      "${aws_s3_bucket.public_assets.arn}/*"
     ]
   }
 }
-
-
-
-
-
-
-
 # private bucket
 # loopを防ぐ実装を行う
 /*
@@ -86,5 +70,18 @@ resource "aws_s3_object" "object" {
   key    = "new_object_key"
   source = "path/to/file"
   etag = filemd5("path/to/file") # privateの場合、etagの使用を検討する
+}
+resource "aws_s3_bucket_lifecycle_configuration" "public_assets" {
+  bucket = aws_s3_bucket.public_assets.id
+  rule {
+    id     = "public_assets"
+    status = "Enabled"
+    expiration {
+      days = 90
+    }
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。
+      prefix = ""
+    }
+  }
 }
 */
