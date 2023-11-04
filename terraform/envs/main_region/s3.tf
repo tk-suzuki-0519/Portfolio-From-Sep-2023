@@ -26,7 +26,7 @@ resource "aws_s3_bucket_versioning" "public_assets_versioning" {
 resource "aws_s3_bucket_public_access_block" "public_ab" {
   bucket                  = aws_s3_bucket.public_assets.id
   block_public_acls       = true
-  block_public_policy     = true
+  block_public_policy     = false # S3バケットを自動作成する処理の中で、block_public_policyはデフォルトtrueなのでfalseにしないと新規作成時でも設定したポリシーの適応が失敗し構築が失敗する。
   ignore_public_acls      = true
   restrict_public_buckets = false
   depends_on = [
