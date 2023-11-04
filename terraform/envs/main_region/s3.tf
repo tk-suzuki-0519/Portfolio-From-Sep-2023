@@ -148,10 +148,51 @@ data "aws_iam_policy_document" "limited_access_only_private_admin" {
   }
 }
 # private bucket for system logs use
-
-
-
-/*
+resource "aws_s3_bucket" "private_sys_logs" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
+  bucket = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
+  tags = {
+    Name = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
+  }
+}
+resource "aws_s3_bucket_versioning" "private_sys_logs_versioning" {
+  bucket = aws_s3_bucket.private_sys_logs.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+resource "aws_s3_bucket_public_access_block" "private_sys_logs_ab" {
+  bucket                  = aws_s3_bucket.private_sys_logs.id
+  block_public_acls       = true
+  block_public_policy     = false # S3バケットを自動作成する処理の中で、block_public_policyはデフォルトtrueなのでfalseにしないと新規作成時でも設定したポリシーの適応が失敗し構築が失敗する。
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  depends_on = [
+    aws_s3_bucket.private_sys_logs
+  ]
+}
+resource "aws_s3_bucket_policy" "private_sys_logs_policy" {
+  bucket = aws_s3_bucket.private_sys_logs.id
+  policy = data.aws_iam_policy_document.limited_access_only_private_sys_logs.json
+  depends_on = [
+    aws_s3_bucket_public_access_block.private_sys_logs_ab
+  ]
+}
+data "aws_iam_policy_document" "limited_access_only_private_sys_logs" {
+  statement {
+    effect = "Allow" # デフォルトは"Allow"
+    principals {     # 特定のadminユーザを許可。# TODO 都度、logを吐き出すsystemを追加する。
+      type        = "AWS"
+      identifiers = [var.admin_iam_arn]
+    }
+    actions = [ # TODO logを吐き出すsystemを追加する際は、putのみ許可。
+      "S3:*",
+    ]
+    resources = [
+      aws_s3_bucket.private_admin.arn,       # buckerそのものへのアクセス
+      "${aws_s3_bucket.private_admin.arn}/*" # bucket内のオブジェクトへのアクセス
+    ]
+  }
+}
 resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
   bucket = aws_s3_bucket.private_sys_logs.id
   rule {
@@ -165,7 +206,5 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
     }
   }
 }
-*/
-
 # private bucket for system logs loop avoidance use
 # TODO loopを防ぐ実装を必要になったタイミングで行う
