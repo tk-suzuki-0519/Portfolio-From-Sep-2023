@@ -2,6 +2,29 @@
 # S3
 # -----------------------------------
 # TODO s3 cross region replicationの実装。
+# S3 Storage Lens
+resource "aws_s3control_storage_lens_configuration" "s3_storage_lens" {
+  config_id = format("%s_S3_Storage_Lens", var.env_name)
+  storage_lens_configuration {
+    enabled = true
+    account_level {
+      activity_metrics {
+        enabled = true
+      }
+      bucket_level {
+        activity_metrics {
+          enabled = true
+        }
+      }
+    }
+    data_export {
+      cloud_watch_metrics {
+        enabled = true
+      }
+      # TODO 後々、S3バケットに出力する必要性があるようであれば、ここで出力する。ループに注意。
+    }
+  }
+}
 # ランダムID生成
 # "random_string"の使用は公式非推奨
 # https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
@@ -78,7 +101,6 @@ resource "aws_s3_bucket_cors_configuration" "public_assets_cors" {
 }
 */
 
-
 # private bucket for admin use
 resource "aws_s3_bucket" "private_admin" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
   bucket = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
@@ -144,5 +166,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
   }
 }
 */
+
 # private bucket for system logs loop avoidance use
 # TODO loopを防ぐ実装を必要になったタイミングで行う
