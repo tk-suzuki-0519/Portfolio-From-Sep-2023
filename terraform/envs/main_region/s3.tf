@@ -188,8 +188,8 @@ data "aws_iam_policy_document" "limited_access_only_private_sys_logs" {
       "S3:*",
     ]
     resources = [
-      aws_s3_bucket.private_admin.arn,       # buckerそのものへのアクセス
-      "${aws_s3_bucket.private_admin.arn}/*" # bucket内のオブジェクトへのアクセス
+      aws_s3_bucket.private_sys_logs.arn,       # buckerそのものへのアクセス
+      "${aws_s3_bucket.private_sys_logs.arn}/*" # bucket内のオブジェクトへのアクセス
     ]
   }
 }
