@@ -81,6 +81,19 @@ data "aws_iam_policy_document" "allow_access_from_public" {
     ]
   }
 }
+resource "aws_s3_bucket_lifecycle_configuration" "public_assets_lifecycle" {
+  bucket = aws_s3_bucket.public_assets.id
+  rule {
+    id     = "public_assets_cleanup_abort_multipart"
+    status = "Enabled"
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+      prefix = ""
+    }
+  }
+}
 # TODO ドメインが確定したらCORSの設定を行う
 /*
 resource "aws_s3_bucket_cors_configuration" "public_assets_cors" {
@@ -147,7 +160,104 @@ data "aws_iam_policy_document" "limited_access_only_private_admin" {
     ]
   }
 }
-# private bucket for system logs use
+resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
+  bucket = aws_s3_bucket.private_admin.id
+  rule {
+    id     = "private_admin_cleanup_abort_multipart"
+    status = "Enabled"
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+      prefix = ""
+    }
+  }
+  rule {
+    id     = "private_admin_noncurrent_version_expiration"
+    status = "Enabled"
+    noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
+      newer_noncurrent_versions = 3
+      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+    }
+
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    }
+  }
+}
+# private bucket for main system logs use with object lock
+resource "aws_s3_bucket" "private_sys_logs_with_objectlock" { # versioningをこの中で使用する事は公式非推奨。object lockを有効化すると自動でversioningが有効化。
+  bucket = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
+  object_lock_enabled = true
+  tags = {
+    Name = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
+  }
+}
+resource "aws_s3_bucket_public_access_block" "private_sys_logs_with_objectlock_ab" {
+  bucket                  = aws_s3_bucket.private_sys_logs_with_objectlock.id
+  block_public_acls       = true
+  block_public_policy     = false # S3バケットを自動作成する処理の中で、block_public_policyはデフォルトtrueなのでfalseにしないと新規作成時でも設定したポリシーの適応が失敗し構築が失敗する。
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  depends_on = [
+    aws_s3_bucket.private_sys_logs_with_objectlock
+  ]
+}
+resource "aws_s3_bucket_policy" "private_sys_logs__with_objectlock_policy" {
+  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
+  policy = data.aws_iam_policy_document.limited_access_only_private_sys_logs_with_objectlock.json
+  depends_on = [
+    aws_s3_bucket_public_access_block.private_sys_logs_with_objectlock_ab
+  ]
+}
+data "aws_iam_policy_document" "limited_access_only_private_sys_logs_with_objectlock" {
+  statement {
+    effect = "Allow" # デフォルトは"Allow"
+    principals {     # 特定のadminユーザを許可。# TODO 都度、logを吐き出すsystemを追加する。
+      type        = "AWS"
+      identifiers = [var.admin_iam_arn]
+    }
+    actions = [ # TODO logを吐き出すsystemを追加する際は、putのみ許可。
+      "S3:*",
+    ]
+    resources = [
+      aws_s3_bucket.private_sys_logs_with_objectlock.arn,       # buckerそのものへのアクセス
+      "${aws_s3_bucket.private_sys_logs_with_objectlock.arn}/*" # bucket内のオブジェクトへのアクセス
+    ]
+  }
+}
+resource "aws_s3_bucket_object_lock_configuration" "private_sys_logs_with_objectlock" { # バージョニングと有効化は指定する必要無し。デフォルトで有効化される。
+  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
+  rule {
+    default_retention {
+      mode = "GOVERNANCE"
+      days = 90
+    }
+  }
+}
+resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_with_objectlock_lifecycle" {
+  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
+  rule {
+    id     = "private_sys_logs_with_objectlock_cleanup_abort_multipart"
+    status = "Enabled"
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+      prefix = ""
+    }
+  }
+  rule {
+    id     = "private_sys_logs_with_objectlock_noncurrent_version_expiration"
+    status = "Enabled"
+    noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
+      newer_noncurrent_versions = 3
+      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+    }
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    }
+  }
+}
+# private bucket for system logs use without object lock
 resource "aws_s3_bucket" "private_sys_logs" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
   bucket = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
   tags = {
@@ -203,6 +313,27 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
     }
     filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
       prefix = ""
+    }
+  }
+  rule {
+    id     = "private_sys_logs_cleanup_abort_multipart"
+    status = "Enabled"
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+      prefix = ""
+    }
+  }
+  rule {
+    id     = "private_sys_logs_noncurrent_version_expiration"
+    status = "Enabled"
+    noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
+      newer_noncurrent_versions = 3
+      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+    }
+
+    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
     }
   }
 }
