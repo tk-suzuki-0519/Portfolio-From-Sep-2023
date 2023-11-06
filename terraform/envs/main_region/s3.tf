@@ -115,7 +115,7 @@ resource "aws_s3_bucket_cors_configuration" "public_assets_cors" {
 */
 
 # private bucket for admin use
-resource "aws_s3_bucket" "private_admin" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
+resource "aws_s3_bucket" "private_admin" {
   bucket = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
   tags = {
     Name = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
@@ -130,7 +130,7 @@ resource "aws_s3_bucket_versioning" "private_admin_versioning" {
 resource "aws_s3_bucket_public_access_block" "private_admin_ab" {
   bucket                  = aws_s3_bucket.private_admin.id
   block_public_acls       = true
-  block_public_policy     = false # S3バケットを自動作成する処理の中で、block_public_policyはデフォルトtrueなのでfalseにしないと新規作成時でも設定したポリシーの適応が失敗し構築が失敗する。
+  block_public_policy     = false
   ignore_public_acls      = true
   restrict_public_buckets = true
   depends_on = [
@@ -146,7 +146,7 @@ resource "aws_s3_bucket_policy" "private_admin_policy" {
 }
 data "aws_iam_policy_document" "limited_access_only_private_admin" {
   statement {
-    effect = "Allow" # デフォルトは"Allow"
+    effect = "Allow"
     principals {     # 特定のadminユーザを許可。
       type        = "AWS"
       identifiers = [var.admin_iam_arn]
@@ -155,8 +155,8 @@ data "aws_iam_policy_document" "limited_access_only_private_admin" {
       "S3:*",
     ]
     resources = [
-      aws_s3_bucket.private_admin.arn,       # buckerそのものへのアクセス
-      "${aws_s3_bucket.private_admin.arn}/*" # bucket内のオブジェクトへのアクセス
+      aws_s3_bucket.private_admin.arn,
+      "${aws_s3_bucket.private_admin.arn}/*"
     ]
   }
 }
@@ -168,7 +168,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
     }
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
       prefix = ""
     }
   }
@@ -180,12 +180,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
       noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
     }
 
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
     }
   }
 }
 # private bucket for main system logs use with object lock
-resource "aws_s3_bucket" "private_sys_logs_with_objectlock" { # versioningをこの中で使用する事は公式非推奨。object lockを有効化すると自動でversioningが有効化。
+resource "aws_s3_bucket" "private_sys_logs_with_objectlock" {
   bucket = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
   object_lock_enabled = true
   tags = {
@@ -195,7 +195,7 @@ resource "aws_s3_bucket" "private_sys_logs_with_objectlock" { # versioningをこ
 resource "aws_s3_bucket_public_access_block" "private_sys_logs_with_objectlock_ab" {
   bucket                  = aws_s3_bucket.private_sys_logs_with_objectlock.id
   block_public_acls       = true
-  block_public_policy     = false # S3バケットを自動作成する処理の中で、block_public_policyはデフォルトtrueなのでfalseにしないと新規作成時でも設定したポリシーの適応が失敗し構築が失敗する。
+  block_public_policy     = false
   ignore_public_acls      = true
   restrict_public_buckets = true
   depends_on = [
@@ -211,8 +211,8 @@ resource "aws_s3_bucket_policy" "private_sys_logs__with_objectlock_policy" {
 }
 data "aws_iam_policy_document" "limited_access_only_private_sys_logs_with_objectlock" {
   statement {
-    effect = "Allow" # デフォルトは"Allow"
-    principals {     # 特定のadminユーザを許可。# TODO 都度、logを吐き出すsystemを追加する。
+    effect = "Allow"
+    principals { # TODO 都度、logを吐き出すsystemを追加する。
       type        = "AWS"
       identifiers = [var.admin_iam_arn]
     }
@@ -220,8 +220,8 @@ data "aws_iam_policy_document" "limited_access_only_private_sys_logs_with_object
       "S3:*",
     ]
     resources = [
-      aws_s3_bucket.private_sys_logs_with_objectlock.arn,       # buckerそのものへのアクセス
-      "${aws_s3_bucket.private_sys_logs_with_objectlock.arn}/*" # bucket内のオブジェクトへのアクセス
+      aws_s3_bucket.private_sys_logs_with_objectlock.arn,
+      "${aws_s3_bucket.private_sys_logs_with_objectlock.arn}/*"
     ]
   }
 }
@@ -242,23 +242,23 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_with_objectlo
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
     }
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
       prefix = ""
     }
   }
   rule {
     id     = "private_sys_logs_with_objectlock_noncurrent_version_expiration"
     status = "Enabled"
-    noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
+    noncurrent_version_expiration {
       newer_noncurrent_versions = 3
-      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+      noncurrent_days = 90
     }
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
     }
   }
 }
 # private bucket for system logs use without object lock
-resource "aws_s3_bucket" "private_sys_logs" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
+resource "aws_s3_bucket" "private_sys_logs" {
   bucket = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
   tags = {
     Name = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
@@ -273,7 +273,7 @@ resource "aws_s3_bucket_versioning" "private_sys_logs_versioning" {
 resource "aws_s3_bucket_public_access_block" "private_sys_logs_ab" {
   bucket                  = aws_s3_bucket.private_sys_logs.id
   block_public_acls       = true
-  block_public_policy     = false # S3バケットを自動作成する処理の中で、block_public_policyはデフォルトtrueなのでfalseにしないと新規作成時でも設定したポリシーの適応が失敗し構築が失敗する。
+  block_public_policy     = false
   ignore_public_acls      = true
   restrict_public_buckets = true
   depends_on = [
@@ -289,8 +289,8 @@ resource "aws_s3_bucket_policy" "private_sys_logs_policy" {
 }
 data "aws_iam_policy_document" "limited_access_only_private_sys_logs" {
   statement {
-    effect = "Allow" # デフォルトは"Allow"
-    principals {     # 特定のadminユーザを許可。# TODO 都度、logを吐き出すsystemを追加する。
+    effect = "Allow"
+    principals { # TODO 都度、logを吐き出すsystemを追加する。
       type        = "AWS"
       identifiers = [var.admin_iam_arn]
     }
@@ -298,8 +298,8 @@ data "aws_iam_policy_document" "limited_access_only_private_sys_logs" {
       "S3:*",
     ]
     resources = [
-      aws_s3_bucket.private_sys_logs.arn,       # buckerそのものへのアクセス
-      "${aws_s3_bucket.private_sys_logs.arn}/*" # bucket内のオブジェクトへのアクセス
+      aws_s3_bucket.private_sys_logs.arn,
+      "${aws_s3_bucket.private_sys_logs.arn}/*"
     ]
   }
 }
@@ -311,7 +311,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
     expiration {
       days = 90
     }
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
       prefix = ""
     }
   }
@@ -321,19 +321,19 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
     }
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
       prefix = ""
     }
   }
   rule {
     id     = "private_sys_logs_noncurrent_version_expiration"
     status = "Enabled"
-    noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
+    noncurrent_version_expiration {
       newer_noncurrent_versions = 3
-      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+      noncurrent_days = 90
     }
 
-    filter { # prefixを指定しない場合必須。(ここでいうprefixとは、filter内prefixではなく、filterと同列に配置できるprefix。)lifecycle ruleを適応する適用する範囲を指定。ここでは全てを指定。
+    filter {
     }
   }
 }
