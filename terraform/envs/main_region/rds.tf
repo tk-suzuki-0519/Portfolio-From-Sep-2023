@@ -60,7 +60,7 @@ resource "aws_db_instance" "rds" {
   engine_version               = "8.0.34"
   identifier                   = format("%s-rds-standalone", var.env_name)
   username                     = "admin"
-  password                     = "Dev@1234"
+  password                     = "Dev!1234"
   instance_class               = "db.t4g.micro"
   apply_immediately            = true
   performance_insights_enabled = true
