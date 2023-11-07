@@ -63,7 +63,7 @@ resource "aws_db_instance" "rds" {
   password                     = "Dev!1234"
   instance_class               = "db.t4g.micro"
   apply_immediately            = true
-  performance_insights_enabled = true
+  performance_insights_enabled = false
   tags = {
     Name = format("%s-rds", var.env_name)
   }
@@ -90,6 +90,11 @@ resource "aws_db_instance" "rds" {
     "general",
     "slowquery"
   ]
+  timeouts { 
+    create = "10m"
+    update = "60m"
+    delete = "20m"
+  }
 
   # backup settings
   auto_minor_version_upgrade = false
