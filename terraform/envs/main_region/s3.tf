@@ -147,7 +147,7 @@ resource "aws_s3_bucket_policy" "private_admin_policy" {
 data "aws_iam_policy_document" "limited_access_only_private_admin" {
   statement {
     effect = "Allow"
-    principals {     # 特定のadminユーザを許可。
+    principals { # 特定のadminユーザを許可。
       type        = "AWS"
       identifiers = [var.admin_iam_arn]
     }
@@ -177,7 +177,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
     status = "Enabled"
     noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
       newer_noncurrent_versions = 3
-      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+      noncurrent_days           = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
     }
 
     filter {
@@ -186,7 +186,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
 }
 # private bucket for main system logs use with object lock
 resource "aws_s3_bucket" "private_sys_logs_with_objectlock" {
-  bucket = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
+  bucket              = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
   object_lock_enabled = true
   tags = {
     Name = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
@@ -251,7 +251,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_with_objectlo
     status = "Enabled"
     noncurrent_version_expiration {
       newer_noncurrent_versions = 3
-      noncurrent_days = 90
+      noncurrent_days           = 90
     }
     filter {
     }
@@ -330,7 +330,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
     status = "Enabled"
     noncurrent_version_expiration {
       newer_noncurrent_versions = 3
-      noncurrent_days = 90
+      noncurrent_days           = 90
     }
 
     filter {
