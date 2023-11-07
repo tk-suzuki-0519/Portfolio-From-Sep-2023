@@ -39,17 +39,16 @@
 ### 技術選定／クラウドインフラ／クラウド基盤共通
 + IaC）  Terraform Cloud
   
-+ 管理コンソールから作成・有効化したサービス・機能）  IAM(管理ユーザ作成), 
++ 管理コンソールから作成・有効化したサービス・機能）  AWS IAM(管理ユーザ作成), 
   
-+ IaCで作成したサービス・機能）  VPC(IPv4), 
++ IaCで作成したサービス・機能） Amazon VPC(IPv4), Amazon S3, 
   
 + 初期設定で有効化されているサービス・機能）  
   
 
-
 <!-- 
 + 管理コンソールから作成・有効化したサービス・機能）  IAM, AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
-+ IaCで作成したサービス・機能）  ECS on Fargate, RDS, ECR, ACM, ALB, S3, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
++ IaCで作成したサービス・機能）  ECS on Fargate, RDS, ECR, ACM, ALB, CloudFront, WAF, CloudWatch log, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
 + 初期設定で有効化されているサービス・機能）  CloudTrail, AWS Shield Standard, AWS Health Dashboard, (コスト系も入れる), 
 -->
   
@@ -60,7 +59,7 @@
   
   
 ## 技術選定／開発ツール
-+ Docker Desktop 4.24.2
++ Docker Desktop 4.25.0
 + aws-cli 2.13.27(オートコンプリート)
 + Terraform v1.6.2(CLI環境)
 + pyenv 2.3.27

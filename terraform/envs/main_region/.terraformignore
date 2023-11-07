@@ -1,0 +1,62 @@
+# リポジトリのルートではなく、tf構成ファイルと同ディレクトリに配置する必要がある。
+# https://support.hashicorp.com/hc/en-us/articles/4407839390227-Using-the-terraformignore-file-to-exclude-files-from-upload-to-Terraform-Cloud-
+
+# ローカルでの"terraform plan"エラー回避用。システムファイルを無視
+/var/run/mysqld/mysqld.sock
+docker/db/mysql/
+*docker/db/mysql*
+
+# Misc
+.DS_Store
+LICENSE.md
+README.md
+
+# Binaries
+*.exe
+*.tfstate
+*.backup
+*.bak
+*.info
+
+# Credentials
+*account.json
+sshkey*
+privkey*
+pubkey*
+id_rsa*
+.git/
+.github/
+.terraform/
+.vscode/
+doc/
+dockerfiles/
+kubernetes/
+schemas/
+templates/
+tools/backend
+frontend
+.editorconfig
+.gitignore
+
+# Terraform
+**.terraform/
+**.terraform.lock.hcl
+**.json
+*.json
+
+# Sensitive
+**policy_documents/
+**trust_document/
+
+# logs
+terraform.log
+
+#Node modules
+node_modules/**
+
+# Coverage reports
+.nyc_output/**
+coverage/**
+
+# Build output folder
+dist/**
