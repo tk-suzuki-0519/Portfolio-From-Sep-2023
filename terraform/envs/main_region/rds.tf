@@ -96,9 +96,9 @@ resource "aws_db_instance" "rds" {
 
   # backup settings
   auto_minor_version_upgrade = false
-  maintenance_window         = "Mon:5:00-Mon:7:00"
+  maintenance_window         = "Mon:05:00-Mon:07:00"
   backup_retention_period    = 1
-  backup_window              = "4:00-5:00"
+  backup_window              = "04:00-05:00"
   copy_tags_to_snapshot      = true
   delete_automated_backups   = true
   skip_final_snapshot        = true
