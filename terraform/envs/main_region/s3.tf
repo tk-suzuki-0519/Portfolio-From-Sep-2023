@@ -38,6 +38,7 @@ resource "random_id" "s3" {
 # TODO 静的ウェブサイトのホスティングをALBを実装するタイミングで実装する。
 resource "aws_s3_bucket" "public_assets" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
   bucket = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   tags = {
     Name = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
   }
@@ -117,6 +118,7 @@ resource "aws_s3_bucket_cors_configuration" "public_assets_cors" {
 # private bucket for admin use
 resource "aws_s3_bucket" "private_admin" {
   bucket = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   tags = {
     Name = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
   }
@@ -187,6 +189,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
 # private bucket for main system logs use with object lock
 resource "aws_s3_bucket" "private_sys_logs_with_objectlock" {
   bucket              = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   object_lock_enabled = true
   tags = {
     Name = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
@@ -260,6 +263,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_with_objectlo
 # private bucket for system logs use without object lock
 resource "aws_s3_bucket" "private_sys_logs" {
   bucket = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   tags = {
     Name = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
   }

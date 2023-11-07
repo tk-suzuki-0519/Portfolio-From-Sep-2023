@@ -47,8 +47,8 @@ resource "aws_db_option_group" "rds_og" {
   major_engine_version     = "8.0"
 }
 resource "aws_db_subnet_group" "rds_sg" {
-  name = format("%s-rds-sg", var.env_name)
-  subnet_ids = [for subnet in aws_subnet.private_subnet : subnet.id]
+  name       = format("%s-rds-sg", var.env_name)
+  subnet_ids = [for subnet in aws_subnet.private_subnet_db : subnet.id]
   tags = {
     Name = format("%s-rds-sg", var.env_name)
   }
@@ -90,10 +90,10 @@ resource "aws_db_instance" "rds" {
     "general",
     "slowquery"
   ]
-  timeouts { 
-    create = "10m"
+  timeouts {
+    create = "20m"
     update = "60m"
-    delete = "20m"
+    delete = "30m"
   }
 
   # backup settings
