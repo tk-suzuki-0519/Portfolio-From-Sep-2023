@@ -58,14 +58,14 @@ resource "aws_db_instance" "rds" {
   db_name                      = "rds_mysql"
   engine                       = "mysql"
   engine_version               = "8.0.34"
-  identifier                   = format("%s_rds_standalone", var.env_name)
+  identifier                   = format("%s-rds-standalone", var.env_name)
   username                     = "admin"
   password                     = "Dev@1234"
   instance_class               = "db.t4g.micro"
   apply_immediately            = true
   performance_insights_enabled = true
   tags = {
-    Name = format("%s_rds", var.env_name)
+    Name = format("%s-rds", var.env_name)
   }
 
   # strage settings
