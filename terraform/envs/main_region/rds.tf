@@ -2,7 +2,7 @@
 # RDS
 # -----------------------------------
 resource "aws_db_parameter_group" "rds_pg" {
-  name   = format("%s_rds_pg", var.env_name)
+  name   = format("%s-rds-pg", var.env_name)
   family = "mysql8.0"
 
   parameter {
@@ -37,23 +37,20 @@ resource "aws_db_parameter_group" "rds_pg" {
     create_before_destroy = true
   }
   tags = {
-    Name = format("%s_rds_pg", var.env_name)
+    Name = format("%s-rds-pg", var.env_name)
   }
 }
 resource "aws_db_option_group" "rds_og" {
-  name                     = format("%s_rds_og", var.env_name)
+  name                     = format("%s-rds-og", var.env_name)
   option_group_description = "Option Group"
   engine_name              = "mysql"
   major_engine_version     = "8.0"
 }
 resource "aws_db_subnet_group" "rds_sg" {
-  name = format("%s_rds_sg", var.env_name)
-  subnet_ids = [
-    aws_subnet.private_subnet[*].id
-  ]
-
+  name = format("%s-rds-sg", var.env_name)
+  subnet_ids = [for subnet in aws_subnet.private_subnet : subnet.id]
   tags = {
-    Name = format("%s_rds_sg", var.env_name)
+    Name = format("%s-rds-sg", var.env_name)
   }
 }
 resource "aws_db_instance" "rds" {
