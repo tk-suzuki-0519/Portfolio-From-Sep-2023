@@ -20,6 +20,9 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   private_dns_enabled = true
   subnet_ids          = [for subnet in aws_subnet.private_subnet_app : subnet.id]
   #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  tags = {
+    Name = format("%s_endpoint_ecr_dkr", var.env_name)
+  }
 }
 resource "aws_vpc_endpoint" "ecr_api" {
   vpc_id              = aws_vpc.vpc.id
@@ -28,6 +31,9 @@ resource "aws_vpc_endpoint" "ecr_api" {
   private_dns_enabled = true
   subnet_ids          = [for subnet in aws_subnet.private_subnet_app : subnet.id]
   #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  tags = {
+    Name = format("%s_endpoint_ecr_api", var.env_name)
+  }
 }
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id              = aws_vpc.vpc.id
@@ -36,6 +42,9 @@ resource "aws_vpc_endpoint" "ssm" {
   private_dns_enabled = true
   subnet_ids          = [for subnet in aws_subnet.private_subnet_app : subnet.id]
   #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  tags = {
+    Name = format("%s_endpoint_ssm", var.env_name)
+  }
 }
 resource "aws_vpc_endpoint" "logs" {
   vpc_id              = aws_vpc.vpc.id
@@ -44,4 +53,7 @@ resource "aws_vpc_endpoint" "logs" {
   private_dns_enabled = true
   subnet_ids          = [for subnet in aws_subnet.private_subnet_app : subnet.id]
   #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  tags = {
+    Name = format("%s_endpoint_logs", var.env_name)
+  }
 }
