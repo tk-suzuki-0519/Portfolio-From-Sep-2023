@@ -19,7 +19,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = [aws_subnet.private_subnet_app[each.key].id]
-  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
 }
 resource "aws_vpc_endpoint" "ecr_api" {
   vpc_id              = aws_vpc.vpc.id
@@ -27,7 +27,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = [aws_subnet.private_subnet_app[each.key].id]
-  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
 }
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id              = aws_vpc.vpc.id
@@ -35,7 +35,7 @@ resource "aws_vpc_endpoint" "ssm" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = [aws_subnet.private_subnet_app[each.key].id]
-  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
 }
 resource "aws_vpc_endpoint" "logs" {
   vpc_id              = aws_vpc.vpc.id
@@ -43,7 +43,7 @@ resource "aws_vpc_endpoint" "logs" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = [aws_subnet.private_subnet_app[each.key].id]
-  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
+  #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
 }
 # AWS PrivateLink(VPC endpoint(Interface)) endpoint route table association
 resource "aws_vpc_endpoint_route_table_association" "endpoint_rta_ecr_dkr" {
