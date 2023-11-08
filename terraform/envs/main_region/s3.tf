@@ -37,7 +37,8 @@ resource "random_id" "s3" {
 # public bucket
 # TODO 静的ウェブサイトのホスティングをALBを実装するタイミングで実装する。
 resource "aws_s3_bucket" "public_assets" { # versioningをこの中で使用する事は公式非推奨。そのため、"aws_s3_bucket_versioning"内で実装。
-  bucket = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
+  bucket        = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   tags = {
     Name = format("%s-public-assets-%s", var.env_name, random_id.s3.hex)
   }
@@ -116,7 +117,8 @@ resource "aws_s3_bucket_cors_configuration" "public_assets_cors" {
 
 # private bucket for admin use
 resource "aws_s3_bucket" "private_admin" {
-  bucket = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
+  bucket        = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   tags = {
     Name = format("%s-private-admin-%s", var.env_name, random_id.s3.hex)
   }
@@ -147,7 +149,7 @@ resource "aws_s3_bucket_policy" "private_admin_policy" {
 data "aws_iam_policy_document" "limited_access_only_private_admin" {
   statement {
     effect = "Allow"
-    principals {     # 特定のadminユーザを許可。
+    principals { # 特定のadminユーザを許可。
       type        = "AWS"
       identifiers = [var.admin_iam_arn]
     }
@@ -177,16 +179,16 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_admin_lifecycle" {
     status = "Enabled"
     noncurrent_version_expiration { # 非現行バージョンをどれだけの数残すかを設定。
       newer_noncurrent_versions = 3
-      noncurrent_days = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
+      noncurrent_days           = 90 # 公式ではオプションだが、右記のterraform cloudのapplyエラーを回避するために設定。"'NoncurrentDays' for NoncurrentVersionExpiration action must be a positive integer"
     }
-
     filter {
     }
   }
 }
 # private bucket for main system logs use with object lock
 resource "aws_s3_bucket" "private_sys_logs_with_objectlock" {
-  bucket = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
+  bucket              = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
+  force_destroy       = true
   object_lock_enabled = true
   tags = {
     Name = format("%s-private-sys-logs-with-objectlock-%s", var.env_name, random_id.s3.hex)
@@ -251,7 +253,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_with_objectlo
     status = "Enabled"
     noncurrent_version_expiration {
       newer_noncurrent_versions = 3
-      noncurrent_days = 90
+      noncurrent_days           = 90
     }
     filter {
     }
@@ -259,7 +261,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_with_objectlo
 }
 # private bucket for system logs use without object lock
 resource "aws_s3_bucket" "private_sys_logs" {
-  bucket = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
+  bucket        = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
+  force_destroy = true
   tags = {
     Name = format("%s-private-sys-logs-%s", var.env_name, random_id.s3.hex)
   }
@@ -330,9 +333,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
     status = "Enabled"
     noncurrent_version_expiration {
       newer_noncurrent_versions = 3
-      noncurrent_days = 90
+      noncurrent_days           = 90
     }
-
     filter {
     }
   }
