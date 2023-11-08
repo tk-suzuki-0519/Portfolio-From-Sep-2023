@@ -61,6 +61,32 @@ resource "aws_vpc_security_group_egress_rule" "fargate_sg_out_all" {
   ip_protocol       = "tcp" # 仕様上、ここを"-1"にするとエラーになる。(ポートとプロトコルを同時に全て開放できない模様。)
   cidr_ipv4         = "0.0.0.0/0"
 }
+# vpc endpoint sg
+resource "aws_security_group" "vpc_endpoint_sg" {
+  name        = format("%s_vpc_endpoint_sg", var.env_name)
+  description = "vpc endpoint security group"
+  vpc_id      = aws_vpc.vpc.id
+  ingress {
+    description = "from private subnet app"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [
+      aws_subnet.private_subnet_app[each.key]
+    ]
+  }
+  egress {
+    description     = "to private subnet app"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+    prefix_list_ids = [aws_vpc_endpoint.ecr_dkr.prefix_list_id, aws_vpc_endpoint.ecr_api.prefix_list_id, aws_vpc_endpoint.ssm.prefix_list_id, aws_vpc_endpoint.logs.prefix_list_id]
+  }
+  tags = {
+    Name = format("%s_vpc_endpoint_sg", var.env_name)
+  }
+}
 # db sg
 resource "aws_security_group" "db_sg" {
   name        = format("%s_sg_db", var.env_name)
