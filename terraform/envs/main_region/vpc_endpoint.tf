@@ -45,20 +45,3 @@ resource "aws_vpc_endpoint" "logs" {
   subnet_ids          = [for subnet in aws_subnet.private_subnet_app : subnet.id]
   #  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
 }
-# AWS PrivateLink(VPC endpoint(Interface)) endpoint route table association
-resource "aws_vpc_endpoint_route_table_association" "endpoint_rta_ecr_dkr" {
-  route_table_id  = aws_route_table.private_app_rt.id
-  vpc_endpoint_id = aws_vpc_endpoint.ecr_dkr.id
-}
-resource "aws_vpc_endpoint_route_table_association" "endpoint_rta_ecr_api" {
-  route_table_id  = aws_route_table.private_app_rt.id
-  vpc_endpoint_id = aws_vpc_endpoint.ecr_api.id
-}
-resource "aws_vpc_endpoint_route_table_association" "endpoint_rta_ssm" {
-  route_table_id  = aws_route_table.private_app_rt.id
-  vpc_endpoint_id = aws_vpc_endpoint.ssm.id
-}
-resource "aws_vpc_endpoint_route_table_association" "endpoint_rta_logs" {
-  route_table_id  = aws_route_table.private_app_rt.id
-  vpc_endpoint_id = aws_vpc_endpoint.logs.id
-}
