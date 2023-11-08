@@ -64,6 +64,13 @@ resource "aws_db_instance" "rds" {
   instance_class               = "db.t4g.micro"
   apply_immediately            = true
   performance_insights_enabled = false
+  /* TODO SSM parameter store設定後、もしくは構築完了後、このコメントアウトを外す。
+  lifecycle {
+    ignore_changes = [
+      password
+    ]
+  }
+  */
   tags = {
     Name = format("%s-rds", var.env_name)
   }
