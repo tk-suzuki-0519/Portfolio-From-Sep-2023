@@ -71,9 +71,7 @@ resource "aws_security_group" "vpc_endpoint_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [
-      aws_subnet.private_subnet_app[each.key]
-    ]
+    cidr_blocks = [for subnet in aws_subnet.private_subnet_app : subnet.cidr_block]
   }
   egress {
     description     = "to private subnet app"
