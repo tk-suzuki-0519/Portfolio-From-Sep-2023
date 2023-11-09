@@ -54,7 +54,7 @@ resource "aws_ecs_service" "service" {
   desired_count    = 1
   network_configuration {
     assign_public_ip = false
-    security_groups  = [aws_security_group.fargate_sg]
+    security_groups  = [aws_security_group.fargate_sg.id]
     subnets          = [for subnet in aws_subnet.private_subnet_app : subnet.id]
   }
   enable_execute_command = true
