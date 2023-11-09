@@ -7,7 +7,7 @@ resource "aws_iam_role" "task_role" {
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
-  "Statement": [ # スタート タスクに IAM ロールを割り当てる
+  "Statement": [
     {
       "Action": "sts:AssumeRole",
       "Principal": {
@@ -15,7 +15,7 @@ resource "aws_iam_role" "task_role" {
       },
       "Effect": "Allow"
     }
-  ] # エンド タスクに IAM ロールを割り当てる
+  ]
 }
 EOF
   tags = {
@@ -28,7 +28,7 @@ resource "aws_iam_role" "task_execution_role" {
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
-  "Statement": [ # スタート タスク用の IAM ロールとポリシーの作成
+  "Statement": [
     {
       "Action": "sts:AssumeRole",
       "Principal": {
@@ -36,7 +36,7 @@ resource "aws_iam_role" "task_execution_role" {
       },
       "Effect": "Allow"
     }
-  ] # エンド タスク用の IAM ロールとポリシーの作成
+  ]
 }
 EOF
   tags = {
@@ -56,16 +56,14 @@ resource "aws_iam_policy" "task_execution_policy" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": [ # スタート SSMからパラメータストア取得用のポリシー
+      "Action": [
         "ssm:GetParameters",
         "ssm:GetParameter"
       ],
       "Effect": "Allow",
-      "Resource": [
-        format("arn:aws:ssm:%s:%s:*", var.main_region, var.admin_iam_id)
-      ]
-    },# エンド SSMからパラメータストア取得用のポリシー
-    { # スタート エンドポイントを介して Amazon ECR イメージをプルする Fargate タスク用の IAM アクセス許可
+      "Resource": "*"
+    },
+    {
       "Effect": "Allow",
       "Action": [
         "ecr:GetAuthorizationToken",
@@ -93,7 +91,7 @@ resource "aws_iam_policy" "task_execution_policy" {
           ],
           "aws:sourceVpc": "aws_vpc.vpc.id"
         }
-      } # エンド エンドポイントを介して Amazon ECR イメージをプルする Fargate タスク用の IAM アクセス許可
+      }
     }
   ]
 }
