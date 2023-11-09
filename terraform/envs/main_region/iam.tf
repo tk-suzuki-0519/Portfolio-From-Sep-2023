@@ -119,10 +119,7 @@ resource "aws_iam_policy" "ecs_exec_policy" {
         "ssmmessages:OpenControlChannel",
         "ssmmessages:OpenDataChannel"
       ],
-      "Resource": [
-        format("arn:aws:ecs:%s:%s:task/*", var.main_region, var.admin_iam_id),
-        format("arn:aws:ecs:%s:%s:cluster/*", var.main_region, var.admin_iam_id)
-      ]
+      "Resource": "*"
     }
   ]
 }

@@ -74,11 +74,11 @@ resource "aws_security_group" "vpc_endpoint_sg" {
     cidr_blocks = [for subnet_id, subnet in aws_subnet.private_subnet_app : subnet.cidr_block]
   }
   egress {
-    description     = "to private subnet app"
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
+    description = "to private subnet app"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
     Name = format("%s_vpc_endpoint_sg", var.env_name)
