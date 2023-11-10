@@ -162,7 +162,7 @@ resource "aws_iam_policy" "ecs_autoscale_role" {
         ],
         "Resource": [
             "*"
-        ]
+        ],
       "Effect": "Allow"
     }
   ]
