@@ -66,7 +66,7 @@ resource "aws_ecs_service" "service" {
 
 # Auto Scaling
 resource "aws_appautoscaling_target" "app_autoscaling_target" {
-  service_namespace  = format("%s_app_autoscaling", var.env_name)
+  service_namespace  = "ecs"
   resource_id        = format("service/%s_ecs_cluster/%s_ecs_service", var.env_name, var.env_name)
   scalable_dimension = "ecs:service:DesiredCount"
   role_arn           = format("arn:aws:iam::%s:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService", var.admin_iam_id)
@@ -75,7 +75,7 @@ resource "aws_appautoscaling_target" "app_autoscaling_target" {
 }
 resource "aws_appautoscaling_policy" "app_autoscaling_scale_up" {
   name               = format("%s_name_app_autoscaling_up", var.env_name)
-  service_namespace  = format("%s_app_autoscaling_up", var.env_name)
+  service_namespace  = "ecs"
   resource_id        = format("service/%s_ecs_cluster/%s_ecs_service", var.env_name, var.env_name)
   scalable_dimension = "ecs:service:DesiredCount"
   step_scaling_policy_configuration {
@@ -90,7 +90,7 @@ resource "aws_appautoscaling_policy" "app_autoscaling_scale_up" {
 }
 resource "aws_appautoscaling_policy" "app_autoscaling_scale_down" {
   name               = format("%s_name_app_autoscaling_down", var.env_name)
-  service_namespace  = format("%s_app_autoscaling_down", var.env_name)
+  service_namespace  = "ecs"
   resource_id        = format("service/%s_ecs_cluster/%s_ecs_service", var.env_name, var.env_name)
   scalable_dimension = "ecs:service:DesiredCount"
   step_scaling_policy_configuration {
