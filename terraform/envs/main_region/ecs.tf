@@ -37,12 +37,6 @@ resource "aws_ecs_task_definition" "nginx_php" {
           condition     = "START"
         }
       ]
-      mountPoints = [
-        {
-          containerPath = "/var/run/php-fpm"
-          sourceVolume  = "php-fpm-socket"
-        }
-      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -58,12 +52,6 @@ resource "aws_ecs_task_definition" "nginx_php" {
       portMappings = []
       environment  = []
       secrets      = []
-      mountPoints = [
-        {
-          containerPath = "/var/run/php-fpm"
-          sourceVolume  = "php-fpm-socket"
-        }
-      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
