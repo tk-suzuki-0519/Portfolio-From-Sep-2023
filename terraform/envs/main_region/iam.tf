@@ -61,7 +61,7 @@ resource "aws_iam_policy" "task_execution_policy" {
         "ssm:GetParameter"
       ],
       "Effect": "Allow",
-      "Resource": "*",
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
