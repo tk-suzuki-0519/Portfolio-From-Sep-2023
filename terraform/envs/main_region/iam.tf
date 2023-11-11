@@ -85,6 +85,7 @@ resource "aws_iam_policy" "task_execution_policy" {
       ],
       "Resource": "*"
     },
+    {
       "Resource": "*",
       "Condition": {
         "StringEquals": {
