@@ -75,6 +75,10 @@ resource "aws_iam_policy" "task_execution_policy" {
     {
       "Effect": "Allow",
       "Action": [
+        "ecr:CompleteLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
         "ecr:BatchCheckLayerAvailability",
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage"
