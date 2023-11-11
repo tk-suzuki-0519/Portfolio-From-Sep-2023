@@ -18,14 +18,12 @@ resource "aws_ecs_cluster" "cluster" {
     }
   }
 }
-resource "aws_ecs_task_definition" "nginx" {
+resource "aws_ecs_task_definition" "nginx_php" {
   family = format("%s_nginx_task_definition", var.env_name)
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = "nginx-image"
-      cpu       = 256
-      memory    = 512 # Amount (in MiB)
+      image     = format("%s.dkr.ecr.%s.amazonaws.com/nginx:latest", var.admin_iam_id, var.main_region)
       essential = true
       portMappings = [
         {
@@ -33,12 +31,53 @@ resource "aws_ecs_task_definition" "nginx" {
           hostPort      = 80
         }
       ]
+      dependsOn = [
+        {
+          containerName = "php"
+          condition     = "START"
+        }
+      ]
+      mountPoints = [
+        {
+          containerPath = "/var/run/php-fpm"
+          sourceVolume  = "php-fpm-socket"
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.ecs.name
+          awslogs-region        = var.main_region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+    },
+    {
+      name         = "php"
+      image        = format("%s.dkr.ecr.%s.amazonaws.com/portfolio-from-sep-2023-php:latest", var.admin_iam_id, var.main_region)
+      portMappings = []
+      environment  = []
+      secrets      = []
+      mountPoints = [
+        {
+          containerPath = "/var/run/php-fpm"
+          sourceVolume  = "php-fpm-socket"
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.ecs.name
+          awslogs-region        = var.main_region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     }
   ])
   task_role_arn            = aws_iam_role.task_role.arn
   execution_role_arn       = aws_iam_role.task_execution_role.arn
-  cpu                      = 256
-  memory                   = 512 # Amount (in MiB)
+  cpu                      = 512
+  memory                   = 3072 # 2048
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
 }
@@ -51,7 +90,7 @@ resource "aws_ecs_service" "service" {
     weight            = 1
   }
   platform_version = "1.4.0"
-  task_definition  = aws_ecs_task_definition.nginx.arn
+  task_definition  = aws_ecs_task_definition.nginx_php.arn
   desired_count    = 1
   network_configuration {
     assign_public_ip = false
