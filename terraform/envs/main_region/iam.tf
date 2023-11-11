@@ -82,7 +82,9 @@ resource "aws_iam_policy" "task_execution_policy" {
         "ecr:BatchCheckLayerAvailability",
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage"
-      ],
+      ]
+      "Resource": "*"
+    },,
       "Resource": "*",
       "Condition": {
         "StringEquals": {
