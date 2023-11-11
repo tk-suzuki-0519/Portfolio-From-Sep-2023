@@ -70,7 +70,7 @@ resource "aws_iam_policy" "task_execution_policy" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "*",
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
