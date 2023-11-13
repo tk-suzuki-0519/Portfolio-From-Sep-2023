@@ -153,7 +153,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm_cpu_low" {
   namespace           = "AWS/ECS"
   period              = "60"
   statistic           = "Average"
-  threshold           = 20
+  threshold           = 25
   dimensions = {
     ClusterName = format("%s_ecs_cluster", var.env_name)
     ServiceName = format("%s_ecs_service", var.env_name)
