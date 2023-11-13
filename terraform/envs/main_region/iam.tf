@@ -94,7 +94,7 @@ resource "aws_iam_role" "task_role_all" {
     {
       "Action": "*",
       "Principal": {
-        "Service": "*"
+        "Service": "ecs-tasks.amazonaws.com"
       },
       "Effect": "Allow"
     }
@@ -114,10 +114,9 @@ resource "aws_iam_role" "task_execution_role_all" {
     {
       "Action": "*",
       "Principal": {
-        "Service": "*"
+        "Service": "ecs-tasks.amazonaws.com"
       },
-      "Effect": "Allow",
-      "Resource" = "*"
+      "Effect": "Allow"
     }
   ]
 }
@@ -141,7 +140,7 @@ resource "aws_iam_policy" "task_execution_policy_all" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": [*],
+      "Action": "*",
       "Effect": "Allow",
       "Resource": "*"
     }
