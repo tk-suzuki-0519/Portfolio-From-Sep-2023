@@ -150,7 +150,7 @@ EOF
 }
 resource "aws_iam_role_policy_attachment" "task_execution_policy_attach_all" {
   role       = aws_iam_role.task_execution_role_all.name
-  policy_arn = aws_iam_policy.task_execution_policy.arn
+  policy_arn = aws_iam_policy.task_execution_policy_all.arn
 }
 /*
 resource "aws_iam_role_policy_attachment" "task_execution_policy_attach" {
