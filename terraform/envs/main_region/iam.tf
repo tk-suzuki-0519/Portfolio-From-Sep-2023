@@ -92,7 +92,7 @@ resource "aws_iam_role" "task_role_all" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": "*",
+      "Action": "sts:AssumeRole",
       "Principal": {
         "Service": "ecs-tasks.amazonaws.com"
       },
@@ -112,7 +112,7 @@ resource "aws_iam_role" "task_execution_role_all" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": "*",
+      "Action": "sts:AssumeRole",
       "Principal": {
         "Service": "ecs-tasks.amazonaws.com"
       },
