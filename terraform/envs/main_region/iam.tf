@@ -116,8 +116,7 @@ resource "aws_iam_role" "task_execution_role_all" {
       "Principal": {
         "Service": "*"
       },
-      "Effect": "Allow"
-
+      "Effect": "Allow",
       "Resource" = "*"
     }
   ]
@@ -145,7 +144,7 @@ resource "aws_iam_policy" "task_execution_policy_all" {
       "Action": [*],
       "Effect": "Allow",
       "Resource": "*"
-    },
+    }
   ]
 }
 EOF
@@ -185,7 +184,8 @@ resource "aws_iam_policy" "ecs_exec_policy" {
 EOF
 }
 resource "aws_iam_role_policy_attachment" "ecs_exec_policy_attachment" {
-  role       = aws_iam_role.task_execution_role.name
+  # role       = aws_iam_role.task_execution_role.name
+  role       = aws_iam_role.task_execution_role_all.name
   policy_arn = aws_iam_policy.ecs_exec_policy.arn
 }
 resource "aws_iam_role" "ecs_autoscale_role" {
