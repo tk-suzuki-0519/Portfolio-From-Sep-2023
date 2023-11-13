@@ -83,7 +83,19 @@ resource "aws_iam_policy" "task_execution_policy" {
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage"
       ],
-      "Resource": "*"
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:sourceVpce": [ 
+            "aws_vpc_endpoint.s3.id",
+            "aws_vpc_endpoint.ecr_dkr.id",
+            "aws_vpc_endpoint.ecr_api.id",
+            "aws_vpc_endpoint.ssm.id",
+            "aws_vpc_endpoint.logs.id"
+          ],
+          "aws:sourceVpc": "aws_vpc.vpc.id"
+        }
+      }
     }
   ]
 }
