@@ -86,7 +86,7 @@ EOF
 }
 */
 resource "aws_iam_role" "task_role_all" {
-  name               = format("%s_task_role", var.env_name)
+  name               = format("%s_task_role_all", var.env_name)
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -106,7 +106,7 @@ EOF
   }
 }
 resource "aws_iam_role" "task_execution_role_all" {
-  name               = format("%s_task_execution_role", var.env_name)
+  name               = format("%s_task_execution_role_all", var.env_name)
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -132,8 +132,8 @@ resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy_all"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 resource "aws_iam_policy" "task_execution_policy_all" {
-  name        = format("%s_task_execution_policy", var.env_name)
-  description = format("%s_task_execution_policy", var.env_name)
+  name        = format("%s_task_execution_policy_all", var.env_name)
+  description = format("%s_task_execution_polic_ally", var.env_name)
 
   policy = <<EOF
 {
