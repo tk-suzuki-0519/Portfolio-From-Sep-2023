@@ -2,6 +2,7 @@
 # IAM
 # -----------------------------------
 # ECS Task Role
+/*
 resource "aws_iam_role" "task_role" {
   name               = format("%s_task_role", var.env_name)
   assume_role_policy = <<EOF
@@ -22,27 +23,9 @@ EOF
     Name = format("%s_task_role", var.env_name)
   }
 }
+/*
 # ECS Task Ececution Role
-resource "aws_iam_role" "task_execution_role" {
-  name               = format("%s_task_execution_role", var.env_name)
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ecs-tasks.amazonaws.com"
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-  tags = {
-    Name = format("%s_task_execution_role", var.env_name)
-  }
-}
+/*
 resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -101,10 +84,82 @@ resource "aws_iam_policy" "task_execution_policy" {
 }
 EOF
 }
+*/
+resource "aws_iam_role" "task_role_all" {
+  name               = format("%s_task_role", var.env_name)
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "*",
+      "Principal": {
+        "Service": "*"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+  tags = {
+    Name = format("%s_task_role", var.env_name)
+  }
+}
+resource "aws_iam_role" "task_execution_role_all" {
+  name               = format("%s_task_execution_role", var.env_name)
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "*",
+      "Principal": {
+        "Service": "*"
+      },
+      "Effect": "Allow"
+
+      "Resource" = "*"
+    }
+  ]
+}
+EOF
+  tags = {
+    Name = format("%s_task_execution_role", var.env_name)
+  }
+}
+
+
+resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy_all" {
+  role       = aws_iam_role.task_execution_role_all.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+resource "aws_iam_policy" "task_execution_policy_all" {
+  name        = format("%s_task_execution_policy", var.env_name)
+  description = format("%s_task_execution_policy", var.env_name)
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [*],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+  ]
+}
+EOF
+}
+resource "aws_iam_role_policy_attachment" "task_execution_policy_attach_all" {
+  role       = aws_iam_role.task_execution_role_all.name
+  policy_arn = aws_iam_policy.task_execution_policy.arn
+}
+/*
 resource "aws_iam_role_policy_attachment" "task_execution_policy_attach" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = aws_iam_policy.task_execution_policy.arn
 }
+*/
 # ECSExec policy
 resource "aws_iam_policy" "ecs_exec_policy" {
   name        = format("%s_ecs_exec_policy", var.env_name)

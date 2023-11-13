@@ -66,7 +66,7 @@ resource "aws_security_group" "vpc_endpoint_sg" {
   name        = format("%s_vpc_endpoint_sg", var.env_name)
   description = "vpc endpoint security group"
   vpc_id      = aws_vpc.vpc.id
-/*
+  /*
   ingress {
     description = "from private subnet app"
     from_port   = 443
