@@ -93,14 +93,14 @@ resource "aws_route_table_association" "public_rta" {
   subnet_id = aws_subnet.public_subnet[each.key].id
 }
 # a route table on private subnets just to disuse default route table 
-resource "aws_route_table" "private_app_rt" {
+resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = format("%s_private_app_rt", var.env_name)
+    Name = format("%s_private_rt", var.env_name)
   }
 }
 resource "aws_route_table_association" "private_app_rta" {
-  route_table_id = aws_route_table.private_app_rt.id
+  route_table_id = aws_route_table.private_rt.id
   for_each = {
     "172.30.2.0/24"  = "ap-northeast-1a"
     "172.30.18.0/24" = "ap-northeast-1c"
@@ -108,14 +108,8 @@ resource "aws_route_table_association" "private_app_rta" {
   }
   subnet_id = aws_subnet.private_subnet_app[each.key].id
 }
-resource "aws_route_table" "private_db_rt" {
-  vpc_id = aws_vpc.vpc.id
-  tags = {
-    Name = format("%s_private_db_rt", var.env_name)
-  }
-}
 resource "aws_route_table_association" "private_db_rta" {
-  route_table_id = aws_route_table.private_db_rt.id
+  route_table_id = aws_route_table.private_rt.id
   for_each = {
     "172.30.3.0/24"  = "ap-northeast-1a"
     "172.30.19.0/24" = "ap-northeast-1c"
