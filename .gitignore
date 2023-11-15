@@ -18,8 +18,11 @@ yarn-error.log
 /.idea
 /.vscode
 
+# setting files
 docker/db/mysql/
 *docker/db/mysql*
+sessionmanager-bundle/
+*sessionmanager-bundle*
 
 # terraform .gitignore template
 # Local .terraform directories
