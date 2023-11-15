@@ -62,8 +62,8 @@ resource "aws_ecs_task_definition" "nginx_php" {
       }
     }
   ])
-  task_role_arn            = aws_iam_role.task_role_all.arn
-  execution_role_arn       = aws_iam_role.task_execution_role_all.arn
+  task_role_arn            = aws_iam_role.task_role.arn
+  execution_role_arn       = aws_iam_role.task_execution_role.arn
   cpu                      = 512
   memory                   = 3072 # 2048
   network_mode             = "awsvpc"
