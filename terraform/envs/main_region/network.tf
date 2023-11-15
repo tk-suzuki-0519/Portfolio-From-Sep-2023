@@ -29,6 +29,21 @@ resource "aws_subnet" "public_subnet" {
     Name = format("%s_public_%s", var.env_name, each.value)
   }
 }
+# public subnet app
+resource "aws_subnet" "public_subnet_app" {
+  for_each = {
+    "172.30.4.0/24"  = "ap-northeast-1a"
+    "172.30.20.0/24" = "ap-northeast-1c"
+    "172.30.36.0/24" = "ap-northeast-1d"
+  }
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = each.key
+  availability_zone       = each.value
+  map_public_ip_on_launch = true
+  tags = {
+    Name = format("%s_public_app_%s", var.env_name, each.value)
+  }
+}
 # private subnets app
 resource "aws_subnet" "private_subnet_app" {
   for_each = {
