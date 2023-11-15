@@ -3,48 +3,19 @@
 # -----------------------------------
 # ECS Task Role
 resource "aws_iam_role" "task_role" {
-  name               = format("%s_task_role", var.env_name)
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ssm:GetParametersByPath",
-        "ssm:GetParameters",
-        "ssm:GetParameter"
-      ],
-      "Effect": "Allow",
-        "Principal" = {
-          Service = "ecs-tasks.amazonaws.com"
-        },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:GetAuthorizationToken",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-        "Principal" = {
-          Service = "ecs-tasks.amazonaws.com"
-        },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:CompleteLayerUpload",
-        "ecr:UploadLayerPart",
-        "ecr:InitiateLayerUpload",
-        "ecr:PutImage",
-        "ecr:BatchCheckLayerAvailability",
-        "ecr:GetDownloadUrlForLayer",
-        "ecr:BatchGetImage"
-      ],
-        "Principal" = {
-          Service = "ecs-tasks.amazonaws.com"
+  name = format("%s_task_role", var.env_name)
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Action" : "sts:AssumeRole",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "ecs-tasks.amazonaws.com"
         }
-  ]
-}
-EOF
+      }
+    ]
+  })
   tags = {
     Name = format("%s_task_role", var.env_name)
   }
@@ -63,9 +34,29 @@ resource "aws_iam_policy" "task_policy" {
           "ssm:GetParameter"
         ],
         "Effect" : "Allow",
-        "Resource" : [
-          "*"
-        ]
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:GetAuthorizationToken",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:CompleteLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ],
+        "Resource" : "*"
       }
     ]
   })
