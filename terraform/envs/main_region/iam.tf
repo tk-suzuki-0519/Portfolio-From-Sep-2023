@@ -15,8 +15,9 @@ resource "aws_iam_role" "task_role" {
         "ssm:GetParameter"
       ],
       "Effect": "Allow",
-      "Resource": "*"
-    },
+        "Principal" = {
+          Service = "ecs-tasks.amazonaws.com"
+        },
     {
       "Effect": "Allow",
       "Action": [
@@ -24,8 +25,9 @@ resource "aws_iam_role" "task_role" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "*"
-    },
+        "Principal" = {
+          Service = "ecs-tasks.amazonaws.com"
+        },
     {
       "Effect": "Allow",
       "Action": [
@@ -37,8 +39,9 @@ resource "aws_iam_role" "task_role" {
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage"
       ],
-      "Resource": "*"
-    }
+        "Principal" = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
   ]
 }
 EOF
