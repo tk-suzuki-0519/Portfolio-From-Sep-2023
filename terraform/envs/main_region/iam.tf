@@ -43,11 +43,12 @@ EOF
     Name = format("%s_task_execution_role", var.env_name)
   }
 }
+/*
 resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
-/*
+*/
 resource "aws_iam_role_policy_attachment" "task_execution_policy_attach" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = aws_iam_policy.task_execution_policy.arn
@@ -93,7 +94,6 @@ resource "aws_iam_policy" "task_execution_policy" {
 }
 EOF
 }
-*/
 # ECSExec policy
 resource "aws_iam_policy" "ecs_exec_policy" {
   name        = format("%s_ecs_exec_policy", var.env_name)
