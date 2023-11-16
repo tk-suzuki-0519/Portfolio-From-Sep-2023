@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "nginx_php" {
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = format("%s.dkr.ecr.%s.amazonaws.com/nginx:latest", var.admin_iam_id, var.main_region)
+      image     = format("%s.dkr.ecr.%s.amazonaws.com/ecr_nginx:latest", var.admin_iam_id, var.main_region)
       essential = true
       portMappings = [
         {
@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "nginx_php" {
     },
     {
       name         = "php"
-      image        = format("%s.dkr.ecr.%s.amazonaws.com/portfolio-from-sep-2023-php:latest", var.admin_iam_id, var.main_region)
+      image        = format("%s.dkr.ecr.%s.amazonaws.com/ecr_php:latest", var.admin_iam_id, var.main_region)
       portMappings = []
       environment  = []
       secrets      = []
