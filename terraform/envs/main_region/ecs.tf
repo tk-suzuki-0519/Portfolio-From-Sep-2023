@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "nginx_php" {
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = format("%s.dkr.ecr.%s.amazonaws.com/ecr_nginx:latest", var.admin_iam_id, var.main_region)
+      image     = format("%s.dkr.ecr.%s.amazonaws.com/nginx:latest", var.admin_iam_id, var.main_region)
       essential = true
       portMappings = [
         {
@@ -31,12 +31,14 @@ resource "aws_ecs_task_definition" "nginx_php" {
           hostPort      = 80
         }
       ]
+/*
       dependsOn = [
         {
           containerName = "php"
           condition     = "START"
         }
       ]
+*/
       logConfiguration = {
         logDriver = "awslogs"
         options = {
