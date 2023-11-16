@@ -23,7 +23,7 @@ resource "aws_iam_role" "task_role" {
 resource "aws_iam_policy" "task_policy" {
   name = format("%s_task_policy", var.env_name)
   path = "/service-role/"
-
+/* 原因切り分け用に一時的に全許可設定にする
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -56,6 +56,16 @@ resource "aws_iam_policy" "task_policy" {
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage"
         ],
+        "Resource" : "*"
+      }
+    ]
+*/
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : "*",
         "Resource" : "*"
       }
     ]
@@ -98,6 +108,7 @@ resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy" {
 resource "aws_iam_policy" "ecs_exec_policy" {
   name        = format("%s_ecs_exec_policy", var.env_name)
   description = format("%s_ecs_exec_policy", var.env_name)
+/* 原因切り分け用に一時的に全許可設定にする
   policy      = <<EOF
 {
   "Version": "2012-10-17",
@@ -112,6 +123,19 @@ resource "aws_iam_policy" "ecs_exec_policy" {
         "ssmmessages:OpenControlChannel",
         "ssmmessages:OpenDataChannel"
       ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+*/
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "*",
       "Resource": "*"
     }
   ]
