@@ -22,7 +22,6 @@ resource "aws_iam_role" "task_role" {
 }
 resource "aws_iam_policy" "task_policy" {
   name = format("%s_task_policy", var.env_name)
-  path = "/service-role/"
 /* 原因切り分け用に一時的に全許可設定にする
   policy = jsonencode({
     "Version" : "2012-10-17",
