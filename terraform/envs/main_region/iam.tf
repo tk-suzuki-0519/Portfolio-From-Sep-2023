@@ -198,7 +198,7 @@ resource "aws_iam_policy" "alb_policy" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": format("arn:aws:iam::%s:root", var.elb_account_id)""
+        "AWS": format("arn:aws:iam::%s:root", var.elb_account_id)
       },
       "Action": "s3:PutObject",
       "Resource": format("%s", var.S3arn_private_sys_logs_with_objectlock)
