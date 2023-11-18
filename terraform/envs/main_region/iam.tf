@@ -189,3 +189,27 @@ resource "aws_iam_role_policy_attachment" "ecs_autoscale_role_attach" {
   role       = aws_iam_role.ecs_autoscale_role.name
   policy_arn = aws_iam_policy.ecs_autoscale_role.arn
 }
+# ALB access log
+resource "aws_iam_policy" "alb_policy" {
+  name = format("%s_alb_policy", var.env_name)
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": format("arn:aws:iam::%s:root", var.elb_account_id)""
+      },
+      "Action": "s3:PutObject",
+      "Resource": format("%s", var.S3arn_private_sys_logs_with_objectlock)
+    }
+  ]
+  })
+  tags = {
+    Name = format("%s_alb_policy", var.env_name)
+  }
+}
+resource "aws_iam_role_policy_attachment" "alb_attachment" {
+  role       = format("arn:aws:iam::%s:role/aws-service-role/elasticloadbalancing.amazonaws.com/AWSServiceRoleForElasticLoadBalancing", var.admin_iam_id)
+  policy_arn = aws_iam_policy.alb_policy_policy.arn
+}
