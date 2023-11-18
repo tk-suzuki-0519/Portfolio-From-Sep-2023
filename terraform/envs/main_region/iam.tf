@@ -211,5 +211,5 @@ resource "aws_iam_policy" "alb_policy" {
 }
 resource "aws_iam_role_policy_attachment" "alb_attachment" {
   role       = format("arn:aws:iam::%s:role/aws-service-role/elasticloadbalancing.amazonaws.com/AWSServiceRoleForElasticLoadBalancing", var.admin_iam_id)
-  policy_arn = aws_iam_policy.alb_policy_policy.arn
+  policy_arn = aws_iam_policy.alb_policy.arn
 }
