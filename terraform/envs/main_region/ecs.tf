@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "nginx_php" {
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = format("%s.dkr.ecr.%s.amazonaws.com/nginx:latest", var.admin_iam_id, var.main_region)
+      image     = format("%s.dkr.ecr.%s.amazonaws.com/ecr_nginx:latest", var.admin_iam_id, var.main_region)
       essential = true
       portMappings = [
         {
@@ -83,7 +83,7 @@ resource "aws_ecs_service" "service" {
   task_definition  = aws_ecs_task_definition.nginx_php.arn
   desired_count    = 1
   network_configuration {
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups  = [aws_security_group.fargate_sg.id]
     subnets          = [for subnet in aws_subnet.public_subnet : subnet.id]
   }
