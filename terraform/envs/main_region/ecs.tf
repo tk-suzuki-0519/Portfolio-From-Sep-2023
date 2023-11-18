@@ -89,7 +89,7 @@ resource "aws_ecs_service" "service" {
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.alb_tg.arn
-    container_name   = format("%s.dkr.ecr.%s.amazonaws.com/ecr_nginx:latest", var.admin_iam_id, var.main_region)
+    container_name   = "nginx"
     container_port   = 80
   }
   enable_execute_command = true
