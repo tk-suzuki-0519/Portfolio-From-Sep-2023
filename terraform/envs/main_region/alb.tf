@@ -6,10 +6,10 @@ resource "aws_lb" "alb" {
   load_balancer_type         = "application"
   internal                   = false
   idle_timeout               = 60
-  ip_address_type = "ipv4"
+  ip_address_type            = "ipv4"
   enable_deletion_protection = false
-  subnets = [for subnet in aws_subnet.public_subnet : subnet.id]
-  security_groups = [aws_security_group.web_sg.id]
+  subnets                    = [for subnet in aws_subnet.public_subnet : subnet.id]
+  security_groups            = [aws_security_group.web_sg.id]
   /* 以下、IAM権限を付与後、コメントアウトを外す
   access_logs {
     bucket  = aws_s3_bucket.private_sys_logs_with_objectlock.id
@@ -22,11 +22,11 @@ resource "aws_lb" "alb" {
   }
 }
 resource "aws_lb_target_group" "alb_tg" {
-  name                 = format("%s-alb-tg", var.env_name)
-  port                 = 80
-  protocol             = "HTTP"
-  target_type          = "ip"
-  vpc_id               = aws_vpc.vpc.id
+  name        = format("%s-alb-tg", var.env_name)
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.vpc.id
   health_check {
     healthy_threshold   = 3
     interval            = 60
@@ -49,7 +49,7 @@ resource "aws_lb_listener" "http_listener" {
   protocol          = "HTTP"
 
   default_action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = aws_lb_target_group.alb_tg.arn
   }
   tags = {
