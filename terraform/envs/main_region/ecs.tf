@@ -87,6 +87,11 @@ resource "aws_ecs_service" "service" {
     security_groups  = [aws_security_group.fargate_sg.id]
     subnets          = [for subnet in aws_subnet.public_subnet : subnet.id]
   }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.alb_tg.arn
+    container_name   = format("%s.dkr.ecr.%s.amazonaws.com/ecr_nginx:latest", var.admin_iam_id, var.main_region)
+    container_port   = 80
+  }
   enable_execute_command = true
   tags = {
     Name = format("%s_ecs_service", var.env_name)
