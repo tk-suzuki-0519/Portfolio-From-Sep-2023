@@ -345,7 +345,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
 
 # ALB access log
 resource "aws_s3_bucket_policy" "s3_policy_to_alb" {
-  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
+  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.bucket
   policy = data.aws_iam_policy_document.alb_log.json
 }
 data "aws_iam_policy_document" "alb_log" {
