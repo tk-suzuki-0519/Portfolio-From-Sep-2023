@@ -341,3 +341,21 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
 }
 # private bucket for system logs loop avoidance use
 # TODO loopを防ぐ実装を必要になったタイミングで行う
+
+
+# ALB access log
+resource "aws_s3_bucket_policy" "s3_policy_to_alb" {
+  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
+  policy = data.aws_iam_policy_document.alb_log.json
+}
+data "aws_iam_policy_document" "alb_log" {
+  statement {
+    effect = "Allow"
+    actions = ["s3:PutObject"]
+    resources = [format("%s/*", var.S3arn_private_sys_logs_with_objectlock)]
+    principals {
+      type = "AWS"
+      identifiers = [format("%s", var.elb_account_id)]
+    }
+  }
+}
