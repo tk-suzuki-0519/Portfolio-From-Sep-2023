@@ -2,7 +2,7 @@
 # ALB(Application Load Balancer)
 # -----------------------------------
 resource "aws_lb" "alb" {
-  name                       = format("%s_alb", var.env_name)
+  name                       = format("%s-alb", var.env_name)
   load_balancer_type         = "application"
   internal                   = false
   idle_timeout               = 60
@@ -20,7 +20,7 @@ resource "aws_lb" "alb" {
   }
 }
 resource "aws_lb_target_group" "alb_tg" {
-  name                 = format("%s_alb_tg", var.env_name)
+  name                 = format("%s-alb-tg", var.env_name)
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
