@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "nginx_php" {
           hostPort      = 80
         }
       ]
-/*
+      /*
       dependsOn = [
         {
           containerName = "php"

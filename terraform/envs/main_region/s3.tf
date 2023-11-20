@@ -350,11 +350,11 @@ resource "aws_s3_bucket_policy" "s3_policy_to_alb" {
 }
 data "aws_iam_policy_document" "alb_log" {
   statement {
-    effect = "Allow"
-    actions = ["*"]
+    effect    = "Allow"
+    actions   = ["*"]
     resources = [format("%s", var.S3arn_private_sys_logs_with_objectlock), format("%s/*", var.S3arn_private_sys_logs_with_objectlock)]
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = [format("%s", var.elb_account_id)]
     }
   }
