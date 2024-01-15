@@ -204,7 +204,7 @@ resource "aws_s3_bucket_public_access_block" "private_sys_logs_with_objectlock_a
     aws_s3_bucket.private_sys_logs_with_objectlock
   ]
 }
-resource "aws_s3_bucket_policy" "private_sys_logs__with_objectlock_policy" {
+resource "aws_s3_bucket_policy" "private_sys_logs_with_objectlock_policy" {
   bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
   policy = data.aws_iam_policy_document.limited_access_only_private_sys_logs_with_objectlock.json
   depends_on = [
