@@ -216,7 +216,7 @@ data "aws_iam_policy_document" "limited_access_only_private_sys_logs_with_object
     effect = "Allow"
     principals { # TODO 都度、logを吐き出すsystemを追加する。
       type        = "AWS"
-      identifiers = [var.admin_iam_arn]
+      identifiers = [var.admin_iam_arn, "arn:aws:iam::582318560864:root"]
     }
     actions = [ # TODO logを吐き出すsystemを追加する際は、putのみ許可。
       "S3:*",
