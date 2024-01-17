@@ -124,7 +124,8 @@ resource "aws_iam_policy" "ecr_pull_policy" {
         "ecr:GetLifecyclePolicy",
         "ecr:GetLifecyclePolicyPreview",
         "ecr:ListTagsForResource",
-        "ecr:DescribeImageScanFindings"
+        "ecr:DescribeImageScanFindings",
+        "s3:PutObject"
       ],
       "Resource": "*"
     }
