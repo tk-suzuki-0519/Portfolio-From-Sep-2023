@@ -355,7 +355,7 @@ data "aws_iam_policy_document" "alb_log" {
     resources = ["prod-private-sys-logs-with-objectlock-8af3c494b15a12e2", "prod-private-sys-logs-with-objectlock-8af3c494b15a12e2/*"]
     principals {
       type        = "AWS"
-      identifiers = [format("%s", var.elb_account_id)]
+      identifiers = ["582318560864"]
     }
   }
 }
