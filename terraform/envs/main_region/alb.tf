@@ -7,7 +7,6 @@ resource "aws_lb" "alb" {
   internal                   = false
   idle_timeout               = 60
   ip_address_type            = "ipv4"
-  ip_address_type            = "ipv4"
   enable_deletion_protection = false
   subnets                    = [for subnet in aws_subnet.public_subnet : subnet.id]
   security_groups            = [aws_security_group.web_sg.id]
