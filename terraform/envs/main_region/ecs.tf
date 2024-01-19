@@ -85,7 +85,7 @@ resource "aws_ecs_service" "service" {
   network_configuration {
     assign_public_ip = true
     security_groups  = [aws_security_group.fargate_sg.id]
-    subnets          = [for subnet in aws_subnet.public_subnet : subnet.id]
+    subnets          = [for subnet in aws_subnet.public_subnet_app : subnet.id]
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.alb_tg.arn
