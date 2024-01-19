@@ -14,8 +14,8 @@ resource "aws_vpc" "vpc" {
 # -----------------------------------
 # subnets
 # -----------------------------------
-# public subnets
-resource "aws_subnet" "public_subnet" {
+# public subnets alb
+resource "aws_subnet" "public_subnet_alb" {
   for_each = {
     "172.30.1.0/24"  = "ap-northeast-1a"
     "172.30.17.0/24" = "ap-northeast-1c"
@@ -26,11 +26,11 @@ resource "aws_subnet" "public_subnet" {
   availability_zone       = each.value
   map_public_ip_on_launch = true
   tags = {
-    Name = format("%s_public_%s", var.env_name, each.value)
+    Name = format("%s_public_alb_%s", var.env_name, each.value)
   }
 }
-# private subnets app
-resource "aws_subnet" "private_subnet_app" {
+# public subnets app
+resource "aws_subnet" "public_subnet_app" {
   for_each = {
     "172.30.2.0/24"  = "ap-northeast-1a"
     "172.30.18.0/24" = "ap-northeast-1c"
@@ -39,9 +39,9 @@ resource "aws_subnet" "private_subnet_app" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = each.key
   availability_zone       = each.value
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = true
   tags = {
-    Name = format("%s_private_app_%s", var.env_name, each.value)
+    Name = format("%s_public_app_%s", var.env_name, each.value)
   }
 }
 # private subnets db
@@ -71,7 +71,7 @@ resource "aws_internet_gateway" "igw" {
 # -----------------------------------
 # Route tables
 # -----------------------------------
-# a route table on public subnets to a Internet gateway
+# a route table on public subnets alb to a Internet gateway
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
@@ -92,27 +92,28 @@ resource "aws_route_table_association" "public_rta" {
   }
   subnet_id = aws_subnet.public_subnet[each.key].id
 }
-# a route table on private subnets just to disuse default route table 
-resource "aws_route_table" "private_app_rt" {
+# a route table on public app subnets
+resource "aws_route_table" "public_app_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = format("%s_private_app_rt", var.env_name)
+    Name = format("%s_public_app_rt", var.env_name)
   }
 }
-resource "aws_route_table" "private_db_rt" {
-  vpc_id = aws_vpc.vpc.id
-  tags = {
-    Name = format("%s_private_db_rt", var.env_name)
-  }
-}
-resource "aws_route_table_association" "private_app_rta" {
-  route_table_id = aws_route_table.private_app_rt.id
+resource "aws_route_table_association" "public_app_rta" {
+  route_table_id = aws_route_table.public_app_rt.id
   for_each = {
     "172.30.2.0/24"  = "ap-northeast-1a"
     "172.30.18.0/24" = "ap-northeast-1c"
     "172.30.34.0/24" = "ap-northeast-1d"
   }
-  subnet_id = aws_subnet.private_subnet_app[each.key].id
+  subnet_id = aws_subnet.public_subnet_app[each.key].id
+}
+# a route table on private db subnets just to disuse default route table
+resource "aws_route_table" "private_db_rt" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = format("%s_private_db_rt", var.env_name)
+  }
 }
 resource "aws_route_table_association" "private_db_rta" {
   route_table_id = aws_route_table.private_db_rt.id
