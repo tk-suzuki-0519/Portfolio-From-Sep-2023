@@ -90,7 +90,7 @@ resource "aws_route_table_association" "public_rta" {
     "172.30.17.0/24" = "ap-northeast-1c"
     "172.30.33.0/24" = "ap-northeast-1d"
   }
-  subnet_id = aws_subnet.public_subnet[each.key].id
+  subnet_id = aws_subnet.public_subnet_alb[each.key].id
 }
 # a route table on public app subnets
 resource "aws_route_table" "public_app_rt" {

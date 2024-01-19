@@ -8,7 +8,7 @@ resource "aws_lb" "alb" {
   idle_timeout               = 60
   ip_address_type            = "ipv4"
   enable_deletion_protection = false
-  subnets                    = [for subnet in aws_subnet.public_subnet : subnet.id]
+  subnets                    = [for subnet in aws_subnet.public_subnet_alb : subnet.id]
   security_groups            = [aws_security_group.web_sg.id]
   /* 以下デバッグ後、コメントアウトを外す
   access_logs {
