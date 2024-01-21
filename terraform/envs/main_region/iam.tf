@@ -124,7 +124,10 @@ resource "aws_iam_policy" "ecr_pull_policy" {
         "ecr:GetLifecyclePolicy",
         "ecr:GetLifecyclePolicyPreview",
         "ecr:ListTagsForResource",
-        "ecr:DescribeImageScanFindings"
+        "ecr:DescribeImageScanFindings",
+        "ssm:GetParameters",
+        "secretsmanager:GetSecretValue",
+        "kms:Decrypt"
       ],
       "Resource": "*"
     }
@@ -132,7 +135,6 @@ resource "aws_iam_policy" "ecr_pull_policy" {
 }
 EOT
 }
-
 resource "aws_iam_role_policy_attachment" "ecr_attachment" {
   policy_arn = aws_iam_policy.ecr_pull_policy.arn
   role       = aws_iam_role.task_execution_role.name
