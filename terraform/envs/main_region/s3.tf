@@ -352,18 +352,6 @@ data "aws_iam_policy_document" "alb_log" {
   statement {
     effect    = "Allow"
     actions   = ["*"]
-    resources = ["prod-private-sys-logs-with-objectlock-8af3c494b15a12e2", "prod-private-sys-logs-with-objectlock-8af3c494b15a12e2/*"]
-    principals {
-      type        = "AWS"
-      identifiers = ["582318560864"]
-    }
-  }
-}
-/* 原因切り分け用に、コメントアウト
-data "aws_iam_policy_document" "alb_log" {
-  statement {
-    effect    = "Allow"
-    actions   = ["*"]
     resources = [format("%s", var.S3arn_private_sys_logs_with_objectlock), format("%s/*", var.S3arn_private_sys_logs_with_objectlock)]
     principals {
       type        = "AWS"
@@ -371,7 +359,6 @@ data "aws_iam_policy_document" "alb_log" {
     }
   }
 }
-*/
 /* 原因切り分け用に、現状全許可のポリシーを設定する
 data "aws_iam_policy_document" "alb_log" {
   statement {
