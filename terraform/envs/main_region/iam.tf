@@ -139,6 +139,10 @@ resource "aws_iam_role_policy_attachment" "ecr_attachment" {
   policy_arn = aws_iam_policy.ecr_pull_policy.arn
   role       = aws_iam_role.task_execution_role.name
 }
+resource "aws_iam_role_policy_attachment" "ecr_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.task_execution_role.name
+}
 
 # ECSExec policy
 resource "aws_iam_policy" "ecs_exec_policy" {

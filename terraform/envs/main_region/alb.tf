@@ -10,11 +10,13 @@ resource "aws_lb" "alb" {
   enable_deletion_protection = false
   subnets                    = [for subnet in aws_subnet.public_subnet_alb : subnet.id]
   security_groups            = [aws_security_group.web_sg.id]
+/* 機能を一旦実装しない
   access_logs {
     bucket  = aws_s3_bucket.private_sys_logs_with_objectlock.id
     prefix  = "alb"
     enabled = true
   }
+*/
   tags = {
     Name = format("%s_alb", var.env_name)
   }
