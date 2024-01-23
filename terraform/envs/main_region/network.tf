@@ -72,18 +72,18 @@ resource "aws_internet_gateway" "igw" {
 # Route tables
 # -----------------------------------
 # a route table on public subnets alb to a Internet gateway
-resource "aws_route_table" "public_rt" {
+resource "aws_route_table" "public_alb_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name = format("%s_public_rt", var.env_name)
   }
 }
-resource "aws_route" "public_to_igw_r" {
+resource "aws_route" "public_alb_to_igw_r" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw.id
-  route_table_id         = aws_route_table.public_rt.id
+  route_table_id         = aws_route_table.public_alb_rt.id
 }
-resource "aws_route_table_association" "public_rta" {
+resource "aws_route_table_association" "public_alb_rta" {
   route_table_id = aws_route_table.public_rt.id
   for_each = {
     "172.30.1.0/24"  = "ap-northeast-1a"
@@ -98,6 +98,11 @@ resource "aws_route_table" "public_app_rt" {
   tags = {
     Name = format("%s_public_app_rt", var.env_name)
   }
+}
+resource "aws_route" "public_app_to_igw_r" {
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+  route_table_id         = aws_route_table.public_alb_rt.id
 }
 resource "aws_route_table_association" "public_app_rta" {
   route_table_id = aws_route_table.public_app_rt.id
