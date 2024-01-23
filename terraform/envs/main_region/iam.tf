@@ -77,7 +77,7 @@ resource "aws_iam_role_policy_attachment" "task_attachment" {
   role       = aws_iam_role.task_role.name
   policy_arn = aws_iam_policy.task_policy.arn
 }
-resource "aws_iam_role_policy_attachment" "task_execution_ecr_admin_attachment" {
+resource "aws_iam_role_policy_attachment" "task_ecr_admin_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
   role       = aws_iam_role.task_role.name
 }
