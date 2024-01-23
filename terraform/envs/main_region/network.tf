@@ -75,7 +75,7 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_route_table" "public_alb_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = format("%s_public_rt", var.env_name)
+    Name = format("%s_public_alb_rt", var.env_name)
   }
 }
 resource "aws_route" "public_alb_to_igw_r" {
@@ -84,7 +84,7 @@ resource "aws_route" "public_alb_to_igw_r" {
   route_table_id         = aws_route_table.public_alb_rt.id
 }
 resource "aws_route_table_association" "public_alb_rta" {
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id = aws_route_table.public_alb_rt.id
   for_each = {
     "172.30.1.0/24"  = "ap-northeast-1a"
     "172.30.17.0/24" = "ap-northeast-1c"

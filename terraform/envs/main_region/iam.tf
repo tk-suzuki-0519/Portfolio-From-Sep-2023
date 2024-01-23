@@ -107,8 +107,8 @@ resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy" {
 
 #ECRからイメージをPULLするための、AmazonEC2ContainerRegistryReadOnlyを付与
 resource "aws_iam_policy" "task_execution_ecr_pull_policy" {
-  name   = format("%s_ecr_pull_policy", var.env_name)
-/*
+  name = format("%s_ecr_pull_policy", var.env_name)
+  /*
   policy = <<EOT
 {
   "Version": "2012-10-17",
