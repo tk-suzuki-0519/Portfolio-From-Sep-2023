@@ -144,6 +144,49 @@ resource "aws_iam_role_policy_attachment" "ecr_admin_attachment" {
   role       = aws_iam_role.task_execution_role.name
 }
 
+# ECR VPC endpoint policy
+resource "aws_iam_policy" "ecr_vpc_policy" {
+  name   = format("%s_ecr_vpc_policy", var.env_name)
+  policy = <<EOT
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+			"Sid": "AllowAll",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "*",
+			"Resource": "*"
+		},
+		{
+			"Sid": "PreventDelete",
+			"Effect": "Deny",
+			"Principal": "*",
+			"Action": "ecr:DeleteRepository",
+			"Resource": "arn:aws:ecr:region:1234567890:repository/repository_name"
+		},
+		{
+			"Sid": "AllowPull",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": "arn:aws:iam::1234567890:role/role_name"
+			},
+			"Action": [
+				"ecr:BatchGetImage",
+				"ecr:GetDownloadUrlForLayer",
+        "ecr:GetAuthorizationToken"
+			],
+			"Resource": "*"
+    }
+  ]
+}
+EOT
+}
+resource "aws_iam_role_policy_attachment" "ecr_vpc_attachment" {
+  policy_arn = aws_iam_policy.ecr_vpc_policy.arn
+  role       = aws_iam_role.task_execution_role.name
+}
+
 # ECSExec policy
 resource "aws_iam_policy" "ecs_exec_policy" {
   name        = format("%s_ecs_exec_policy", var.env_name)
