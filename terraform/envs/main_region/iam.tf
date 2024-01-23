@@ -77,6 +77,10 @@ resource "aws_iam_role_policy_attachment" "task_attachment" {
   role       = aws_iam_role.task_role.name
   policy_arn = aws_iam_policy.task_policy.arn
 }
+resource "aws_iam_role_policy_attachment" "task_execution_ecr_admin_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.task_role.name
+}
 # ECS Task Execution Role
 resource "aws_iam_role" "task_execution_role" {
   name = format("%s_task_execution_role", var.env_name)
@@ -102,7 +106,7 @@ resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy" {
 }
 
 #ECRからイメージをPULLするための、AmazonEC2ContainerRegistryReadOnlyを付与
-resource "aws_iam_policy" "ecr_pull_policy" {
+resource "aws_iam_policy" "task_execution_ecr_pull_policy" {
   name   = format("%s_ecr_pull_policy", var.env_name)
   policy = <<EOT
 {
@@ -133,11 +137,11 @@ resource "aws_iam_policy" "ecr_pull_policy" {
 }
 EOT
 }
-resource "aws_iam_role_policy_attachment" "ecr_attachment" {
-  policy_arn = aws_iam_policy.ecr_pull_policy.arn
+resource "aws_iam_role_policy_attachment" "task_execution_ecr_attachment" {
+  policy_arn = aws_iam_policy.task_execution_ecr_pull_policy.arn
   role       = aws_iam_role.task_execution_role.name
 }
-resource "aws_iam_role_policy_attachment" "ecr_admin_attachment" {
+resource "aws_iam_role_policy_attachment" "task_execution_ecr_admin_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
   role       = aws_iam_role.task_execution_role.name
 }
