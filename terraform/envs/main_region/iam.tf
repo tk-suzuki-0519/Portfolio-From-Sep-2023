@@ -8,39 +8,21 @@ resource "aws_iam_role" "task_role" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Sid" : "ecs-tasks",
+        "Action" : "*",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "*"
+        }
+      }
+      /*
+      {
         "Action" : "sts:AssumeRole",
         "Effect" : "Allow",
         "Principal" : {
           "Service" : "ecs-tasks.amazonaws.com"
         }
-      },
-      {
-        "Sid" : "AllowAll",
-        "Effect" : "Allow",
-        "Principal" : "*",
-        "Action" : "*",
-      },
-      {
-        "Sid" : "PreventDelete",
-        "Effect" : "Deny",
-        "Principal" : "*",
-        "Action" : "ecr:DeleteRepository",
-        "Resource" : format("arn:aws:ecr:%s:%s:repository/*", var.main_region, var.admin_iam_id)
-      },
-      {
-        "Sid" : "AllowPull",
-        "Effect" : "Allow",
-        "Principal" : {
-          "AWS" : format("arn:aws:iam::%s:role/*", var.admin_iam_id)
-        },
-        "Action" : [
-          "ecr:BatchGetImage",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:GetAuthorizationToken"
-        ],
-        "Resource" : "*"
       }
+      */
     ]
   })
   tags = {
@@ -107,20 +89,27 @@ resource "aws_iam_role_policy_attachment" "task_attachment" {
 # ECS Task Execution Role
 resource "aws_iam_role" "task_execution_role" {
   name               = format("%s_task_execution_role", var.env_name)
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ecs-tasks.amazonaws.com"
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Action" : "*",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "*"
+        }
+      }
+      /*
+      {
+        "Action" : "sts:AssumeRole",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "ecs-tasks.amazonaws.com"
+        }
+      }
+      */
+    ]
+  })
   tags = {
     Name = format("%s_task_execution_role", var.env_name)
   }
