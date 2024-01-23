@@ -4,15 +4,43 @@
 # ECS Task Role
 resource "aws_iam_role" "task_role" {
   name = format("%s_task_role", var.env_name)
-  assume_role_policy = jsonencode({
+  assume_role_policy = jsonencode({ # 公式情報。"Statements without a sid cannot be overridden. In other words, a statement without a sid from source_policy_documents cannot be overridden by statements from override_policy_documents."
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        "Sid" : "ecs-tasks",
         "Action" : "sts:AssumeRole",
         "Effect" : "Allow",
         "Principal" : {
           "Service" : "ecs-tasks.amazonaws.com"
         }
+      },
+      {
+        "Sid" : "AllowAll",
+        "Effect" : "Allow",
+        "Principal" : "*",
+        "Action" : "*",
+        "Resource" : "*"
+      },
+      {
+        "Sid" : "PreventDelete",
+        "Effect" : "Deny",
+        "Principal" : "*",
+        "Action" : "ecr:DeleteRepository",
+        "Resource" : format("arn:aws:ecr:%s:%s:repository/*", var.main_region, var.admin_iam_id)
+      },
+      {
+        "Sid" : "AllowPull",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : format("arn:aws:iam::%s:role/*", var.admin_iam_id)
+        },
+        "Action" : [
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetAuthorizationToken"
+        ],
+        "Resource" : "*"
       }
     ]
   })
@@ -141,49 +169,6 @@ resource "aws_iam_role_policy_attachment" "ecr_attachment" {
 }
 resource "aws_iam_role_policy_attachment" "ecr_admin_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-  role       = aws_iam_role.task_execution_role.name
-}
-
-# ECR VPC endpoint policy
-resource "aws_iam_policy" "ecr_vpc_policy" {
-  name   = format("%s_ecr_vpc_policy", var.env_name)
-  policy = <<EOT
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-			"Sid": "AllowAll",
-			"Effect": "Allow",
-			"Principal": "*",
-			"Action": "*",
-			"Resource": "*"
-		},
-		{
-			"Sid": "PreventDelete",
-			"Effect": "Deny",
-			"Principal": "*",
-			"Action": "ecr:DeleteRepository",
-			"Resource": "arn:aws:ecr:region:1234567890:repository/repository_name"
-		},
-		{
-			"Sid": "AllowPull",
-			"Effect": "Allow",
-			"Principal": {
-				"AWS": "arn:aws:iam::1234567890:role/role_name"
-			},
-			"Action": [
-				"ecr:BatchGetImage",
-				"ecr:GetDownloadUrlForLayer",
-        "ecr:GetAuthorizationToken"
-			],
-			"Resource": "*"
-    }
-  ]
-}
-EOT
-}
-resource "aws_iam_role_policy_attachment" "ecr_vpc_attachment" {
-  policy_arn = aws_iam_policy.ecr_vpc_policy.arn
   role       = aws_iam_role.task_execution_role.name
 }
 
