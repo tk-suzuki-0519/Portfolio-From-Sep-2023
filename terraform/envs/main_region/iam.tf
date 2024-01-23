@@ -8,21 +8,12 @@ resource "aws_iam_role" "task_role" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Action" : "*",
-        "Effect" : "Allow",
-        "Principal" : {
-          "Service" : "ecs-tasks.amazonaws.com"
-        }
-      }
-      /*
-      {
         "Action" : "sts:AssumeRole",
         "Effect" : "Allow",
         "Principal" : {
           "Service" : "ecs-tasks.amazonaws.com"
         }
       }
-      */
     ]
   })
   tags = {
@@ -93,7 +84,7 @@ resource "aws_iam_role" "task_execution_role" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Action" : "*",
+        "Action" : "sts:AssumeRole",
         "Effect" : "Allow",
         "Principal" : {
           "Service" : "ecs-tasks.amazonaws.com"
