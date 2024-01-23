@@ -20,7 +20,6 @@ resource "aws_iam_role" "task_role" {
         "Effect" : "Allow",
         "Principal" : "*",
         "Action" : "*",
-        "Resource" : "*"
       },
       {
         "Sid" : "PreventDelete",
