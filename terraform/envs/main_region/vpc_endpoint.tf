@@ -2,6 +2,7 @@
 # VPC endpoint
 # -----------------------------------
 # VPC endpoint(Gateway) for S3
+/*
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.vpc.id
   service_name      = format("com.amazonaws.%s.s3", var.main_region)
@@ -46,3 +47,4 @@ resource "aws_vpc_endpoint" "logs" {
     Name = format("%s_endpoint_logs", var.env_name)
   }
 }
+*/
