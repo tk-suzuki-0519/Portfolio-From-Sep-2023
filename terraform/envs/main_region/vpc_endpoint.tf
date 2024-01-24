@@ -1,7 +1,6 @@
 # -----------------------------------
 # VPC endpoint
 # -----------------------------------
-/*
 resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_id              = aws_vpc.vpc.id
   service_name        = format("com.amazonaws.%s.ecr.dkr", var.main_region)
@@ -35,4 +34,3 @@ resource "aws_vpc_endpoint" "logs" {
     Name = format("%s_endpoint_logs", var.env_name)
   }
 }
-*/

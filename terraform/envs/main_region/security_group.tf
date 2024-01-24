@@ -81,7 +81,6 @@ resource "aws_vpc_security_group_ingress_rule" "db_sg_in_tcp3306" {
 # db sgrでは、fargateへの通信を許可するegressルールは追加しない。
 # 理由 デフォルトでegreeルールは全て許可だが、何かしらのセキュリティグループを作成した段階でegressルールは仕様で全て拒否になる。この拒否ルールはDBサブネットで想定された設定。また、ingressでfargateからの通信は許可しているため、ステートフルの観点からfargateへの応答通信は成立し、問題がないため。
 # vpc endpoint sg
-/*
 resource "aws_security_group" "vpc_endpoint_sg" {
   name        = format("%s_vpc_endpoint_sg", var.env_name)
   description = "vpc endpoint security group"
@@ -91,7 +90,10 @@ resource "aws_security_group" "vpc_endpoint_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    /*
     cidr_blocks = [for subnet_id, subnet in aws_subnet.public_subnet_app : subnet.cidr_block]
+    */
   }
   egress {
     description = "to public subnet app"
@@ -104,4 +106,3 @@ resource "aws_security_group" "vpc_endpoint_sg" {
     Name = format("%s_vpc_endpoint_sg", var.env_name)
   }
 }
-*/
