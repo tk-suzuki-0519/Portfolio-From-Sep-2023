@@ -77,7 +77,7 @@ resource "aws_ecs_service" "service" {
     base              = 0
     weight            = 1
   }
-  platform_version = "1.4.0"
+  platform_version = "1.3.0"
   task_definition  = aws_ecs_task_definition.nginx_php.arn
   desired_count    = 1
   network_configuration {
