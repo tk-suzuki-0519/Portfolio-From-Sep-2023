@@ -102,7 +102,7 @@ resource "aws_route_table" "public_app_rt" {
 resource "aws_route" "public_app_to_igw_r" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw.id
-  route_table_id         = aws_route_table.public_alb_rt.id
+  route_table_id         = aws_route_table.public_app_rt.id
 }
 resource "aws_route_table_association" "public_app_rta" {
   route_table_id = aws_route_table.public_app_rt.id
