@@ -46,19 +46,22 @@ resource "aws_security_group" "fargate_sg" {
 }
 # fargate sgr
 resource "aws_vpc_security_group_ingress_rule" "fargate_sg_in_http" {
-  security_group_id            = aws_security_group.fargate_sg.id
-  from_port                    = 80
-  to_port                      = 80
-  ip_protocol                  = "tcp"
+  security_group_id = aws_security_group.fargate_sg.id
+  from_port         = 0
+  to_port           = 0
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+  /*
   referenced_security_group_id = aws_security_group.web_sg.id
+  */
 }
 # TODO Systems Managerからのingressを後々必要になった時に追記する。
-# TODO ECS on Fargateの実装時の原因切り分けを容易にするため、下記で一旦Fargateのプライベートサブネットのegress通信を全て許可する。実装完了後、想定されている通信のみegress許可する。現在想定：DBとS3への通信。
+# TODO ECS on Fargateの実装時の原因切り分けを容易にするため、下記で一旦Fargateのプライベートサブネットのegress通信を全て許可する。実装完了後、想定されている通信のみegress許可する。現在想定：DBとS3とECRへの通信。
 resource "aws_vpc_security_group_egress_rule" "fargate_sg_out_all" {
   security_group_id = aws_security_group.fargate_sg.id
   from_port         = 0
   to_port           = 0
-  ip_protocol       = "tcp" # 仕様上、ここを"-1"にするとエラーになる。(ポートとプロトコルを同時に全て開放できない模様。)
+  ip_protocol       = "-1"
   cidr_ipv4         = "0.0.0.0/0"
 }
 # db sg
@@ -80,3 +83,28 @@ resource "aws_vpc_security_group_ingress_rule" "db_sg_in_tcp3306" {
 }
 # db sgrでは、fargateへの通信を許可するegressルールは追加しない。
 # 理由 デフォルトでegreeルールは全て許可だが、何かしらのセキュリティグループを作成した段階でegressルールは仕様で全て拒否になる。この拒否ルールはDBサブネットで想定された設定。また、ingressでfargateからの通信は許可しているため、ステートフルの観点からfargateへの応答通信は成立し、問題がないため。
+# vpc endpoint sg
+/*
+resource "aws_security_group" "vpc_endpoint_sg" {
+  name        = format("%s_vpc_endpoint_sg", var.env_name)
+  description = "vpc endpoint security group"
+  vpc_id      = aws_vpc.vpc.id
+  ingress {
+    description = "from public subnet app"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [for subnet_id, subnet in aws_subnet.public_subnet_app : subnet.cidr_block]
+  }
+  egress {
+    description = "to public subnet app"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = format("%s_vpc_endpoint_sg", var.env_name)
+  }
+}
+*/

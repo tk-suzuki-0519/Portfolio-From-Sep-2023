@@ -204,7 +204,7 @@ resource "aws_s3_bucket_public_access_block" "private_sys_logs_with_objectlock_a
     aws_s3_bucket.private_sys_logs_with_objectlock
   ]
 }
-resource "aws_s3_bucket_policy" "private_sys_logs__with_objectlock_policy" {
+resource "aws_s3_bucket_policy" "private_sys_logs_with_objectlock_policy" {
   bucket = aws_s3_bucket.private_sys_logs_with_objectlock.id
   policy = data.aws_iam_policy_document.limited_access_only_private_sys_logs_with_objectlock.json
   depends_on = [
@@ -216,7 +216,7 @@ data "aws_iam_policy_document" "limited_access_only_private_sys_logs_with_object
     effect = "Allow"
     principals { # TODO 都度、logを吐き出すsystemを追加する。
       type        = "AWS"
-      identifiers = [var.admin_iam_arn]
+      identifiers = [var.admin_iam_arn, "arn:aws:iam::582318560864:root"]
     }
     actions = [ # TODO logを吐き出すsystemを追加する際は、putのみ許可。
       "S3:*",
@@ -341,3 +341,36 @@ resource "aws_s3_bucket_lifecycle_configuration" "private_sys_logs_lifecycle" {
 }
 # private bucket for system logs loop avoidance use
 # TODO loopを防ぐ実装を必要になったタイミングで行う
+
+
+# ALB access log
+/* 実装しない
+resource "aws_s3_bucket_policy" "s3_policy_to_alb" {
+  bucket = aws_s3_bucket.private_sys_logs_with_objectlock.bucket
+  policy = data.aws_iam_policy_document.alb_log.json
+}
+data "aws_iam_policy_document" "alb_log" {
+  statement {
+    effect    = "Allow"
+    actions   = ["*"]
+    resources = [format("%s", var.S3arn_private_sys_logs_with_objectlock), format("%s/*", var.S3arn_private_sys_logs_with_objectlock)]
+    principals {
+      type        = "AWS"
+      identifiers = [format("%s", var.elb_account_id)]
+    }
+  }
+}
+*/
+/* 原因切り分け用に、現状全許可のポリシーを設定する
+data "aws_iam_policy_document" "alb_log" {
+  statement {
+    effect = "Allow"
+    actions = ["s3:PutObject"]
+    resources = [format("%s/*", var.S3arn_private_sys_logs_with_objectlock)]
+    principals {
+      type = "AWS"
+      identifiers = [format("%s", var.elb_account_id)]
+    }
+  }
+}
+*/
