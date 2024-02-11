@@ -41,15 +41,18 @@
   
 + 管理コンソールから作成・有効化したサービス・機能）  AWS IAM(管理ユーザ作成), 
   
-+ IaCで作成したサービス・機能） Amazon ECR, Amazon ECS(AWS Fargate, AWS Auto Scaling), Amazon VPC(IPv4), Amazon S3, Amazon RDS, Amazon CloudWatch Logs, AWS IAM(ロール), AWS Systems Manager(ECSExec用), 
++ IaCで作成したサービス・機能）
+  Amazon ECR, Amazon ECS(AWS Fargate, AWS Auto Scaling), Elastic Load Balancing(ALB), Amazon VPC(IPv4), Amazon S3, Amazon RDS, Amazon CloudWatch Logs, AWS IAM, AWS Systems Manager(ECSExec, DB password), 
   
 + 初期設定で有効化されているサービス・機能）  
   
++ その他コスト管理サービス・機能）  
+  AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
+  
 
 <!-- 
-+ 管理コンソールから作成・有効化したサービス・機能）  AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
-+ IaCで作成したサービス・機能）   ACM, ALB, CloudFront, WAF, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
-+ 初期設定で有効化されているサービス・機能）  CloudTrail, AWS Shield Standard, AWS Health Dashboard, (コスト系も入れる), 
++ IaCで作成したサービス・機能）   ACM, CloudFront, WAF, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
++ 初期設定で有効化されているサービス・機能）  CloudTrail, AWS Shield Standard, AWS Health Dashboard,
 -->
   
 ### 技術選定／クラウドインフラ／サーバレス環境

@@ -75,7 +75,7 @@ resource "aws_db_instance" "rds" {
     Name = format("%s-rds", var.env_name)
   }
 
-  # strage settings
+  # storage settings
   storage_type          = "gp2"
   allocated_storage     = 20
   max_allocated_storage = 0 # "0"でストレージオートスケーリングを無効化。
