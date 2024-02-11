@@ -41,14 +41,14 @@
   
 + 管理コンソールから作成・有効化したサービス・機能）  AWS IAM(管理ユーザ作成), 
   
-+ IaCで作成したサービス・機能）
++ IaCで作成したサービス・機能）  
   Amazon ECR, Amazon ECS(AWS Fargate, AWS Auto Scaling), Elastic Load Balancing(ALB), Amazon VPC(IPv4), Amazon S3, Amazon RDS, Amazon CloudWatch Logs, AWS IAM, AWS Systems Manager(ECSExec, DB password), 
   
 + 初期設定で有効化されているサービス・機能）  
   
 + その他コスト管理サービス・機能）  
   AWS billing Alarms, AWS Budget, AWS Cost Explorer, 
-  
+
 
 <!-- 
 + IaCで作成したサービス・機能）   ACM, CloudFront, WAF, Route53, VPC Flow Logs, AWS Config, KMS, Athena, Amazon Inspector, Guard Duty, 
@@ -77,7 +77,7 @@
   
 ## 技術選定／生成AI（動画・静止画・コード生成）
 + Creative Reality Studio（写真とテキストを入力し、しゃべるアバター動画を出力するAI。トップページの動画を生成）
-+ DiffusionBee（テキストを入力し、画像を出力するAI。favicon.icoを生成）
++ DiffusionBee（favicon.icoを生成。テキストを入力し、画像を出力するAI。）
 + ChatGPT（version4）　HTML/CSS/Bootstrapを生成
   
   
