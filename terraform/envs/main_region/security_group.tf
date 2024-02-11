@@ -74,6 +74,15 @@ resource "aws_security_group" "db_sg" {
   }
 }
 # db sgr
+# 障害切り分け用に、下記の全許可設定を実装
+resource "aws_vpc_security_group_ingress_rule" "db_sg_in_all" {
+  security_group_id            = aws_security_group.db_sg.id
+  from_port                    = 0
+  to_port                      = 0
+  ip_protocol                  = "-1"
+  cidr_ipv4                    = "0.0.0.0/0"
+}
+/*
 resource "aws_vpc_security_group_ingress_rule" "db_sg_in_tcp3306" {
   security_group_id            = aws_security_group.db_sg.id
   from_port                    = 3306
@@ -81,6 +90,7 @@ resource "aws_vpc_security_group_ingress_rule" "db_sg_in_tcp3306" {
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.fargate_sg.id
 }
+*/
 resource "aws_vpc_security_group_egress_rule" "db_sg_out_all" {
   security_group_id = aws_security_group.db_sg.id
   from_port         = 0
