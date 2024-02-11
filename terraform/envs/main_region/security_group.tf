@@ -32,7 +32,7 @@ resource "aws_vpc_security_group_egress_rule" "web_sg_out_all" { # 今後の拡�
   security_group_id = aws_security_group.web_sg.id
   from_port         = 0
   to_port           = 0
-  ip_protocol       = "tcp" # 仕様上、ここを"-1"にするとエラーになる。(ポートとプロトコルを同時に全て開放できない模様。)
+  ip_protocol       = "-1" # ここを「TCPで他を全て開放設定」にすると、ターゲットグループは起動中のコンテナを登録できない。コンテナが200を返さない。
   cidr_ipv4         = "0.0.0.0/0"
 }
 # fargate sg
@@ -76,11 +76,11 @@ resource "aws_security_group" "db_sg" {
 # db sgr
 # 障害切り分け用に、下記の全許可設定を実装
 resource "aws_vpc_security_group_ingress_rule" "db_sg_in_all" {
-  security_group_id            = aws_security_group.db_sg.id
-  from_port                    = 0
-  to_port                      = 0
-  ip_protocol                  = "-1"
-  cidr_ipv4                    = "0.0.0.0/0"
+  security_group_id = aws_security_group.db_sg.id
+  from_port         = 0
+  to_port           = 0
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
 }
 /*
 resource "aws_vpc_security_group_ingress_rule" "db_sg_in_tcp3306" {
