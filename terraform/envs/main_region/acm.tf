@@ -2,9 +2,9 @@
 # acm
 # -----------------------------------
 resource "aws_acm_certificate" "main_region_cert" {
-  domain_name = var.main_domain
+  domain_name               = var.main_domain
   subject_alternative_names = [format("www.%s", var.main_domain)]
-  validation_method = "DNS"
+  validation_method         = "DNS"
   tags = {
     Name = format("%s_cert", var.main_domain)
   }
@@ -14,7 +14,7 @@ resource "aws_acm_certificate" "main_region_cert" {
   }
 }
 resource "aws_acm_certificate_validation" "cert_valid" {
-  certificate_arn = aws_acm_certificate.main_region_cert.arn
+  certificate_arn         = aws_acm_certificate.main_region_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_valid : record.fqdn]
 }
 resource "aws_route53_record" "cert_valid" {
@@ -26,9 +26,9 @@ resource "aws_route53_record" "cert_valid" {
     }
   }
   allow_overwrite = true
-  name    = each.value.name
-  records = [each.value.record]
-  ttl     = 60
-  type    = each.value.type
-  zone_id = data.aws_route53_zone.main_domain.id
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.main_domain.id
 }
