@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "asset" {
   }
   # 証明書
   viewer_certificate {
-    cloudfront_default_certificate = false
+    cloudfront_default_certificate = true
 /*
     # acm_certificate_arn            = var.
     minimum_protocol_version = "TLSv1.2_2021"
