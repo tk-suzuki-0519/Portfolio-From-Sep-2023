@@ -39,10 +39,10 @@
 ### 技術選定／クラウドインフラ／クラウド基盤共通
 + IaC）  Terraform Cloud
   
-+ 管理コンソールから作成・有効化したサービス・機能）  AWS IAM(管理ユーザ作成), 
++ 管理コンソールから作成・有効化したサービス・機能）  AWS IAM(管理ユーザ作成のみ), Amazon Route 53(ドメイン登録のみ), 
   
 + IaCで作成したサービス・機能）  
-  Amazon ECR, Amazon ECS(AWS Fargate, AWS Auto Scaling), Elastic Load Balancing(ALB), Amazon VPC(IPv4), Amazon S3, Amazon RDS, Amazon CloudWatch Logs, AWS IAM, AWS Systems Manager(ECSExec, DB password), 
+  Amazon ECR, Amazon ECS(AWS Fargate, AWS Auto Scaling), Elastic Load Balancing(ALB), Amazon VPC(IPv4), Amazon S3, Amazon RDS, Amazon CloudWatch Logs, AWS IAM, AWS Systems Manager(ECSExec, DB password), Amazon Route 53, 
   
 + 初期設定で有効化されているサービス・機能）  
   
