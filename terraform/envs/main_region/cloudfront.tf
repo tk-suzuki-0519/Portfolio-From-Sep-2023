@@ -76,12 +76,14 @@ resource "aws_cloudfront_distribution" "asset" {
     }
   }
   # 証明書
+/*
   viewer_certificate {
     cloudfront_default_certificate = false
     # acm_certificate_arn            = var.
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
+*/
 }
 
 # OAC
