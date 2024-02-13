@@ -26,3 +26,7 @@ variable "S3arn_private_sys_logs_with_objectlock" {
   description = "S3 arn of 'privatesys_logs_with_objectlock'"
   type        = string
 }
+variable "main_domain" {
+  description = "main_domain"
+  type        = string
+}
