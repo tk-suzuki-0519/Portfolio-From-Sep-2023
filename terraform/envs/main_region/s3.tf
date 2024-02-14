@@ -81,6 +81,25 @@ data "aws_iam_policy_document" "allow_access_from_public" {
       "${aws_s3_bucket.public_assets.arn}/*" # bucket内のオブジェクトへのアクセス
     ]
   }
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    actions = [
+      "S3:GetObject",
+    ]
+    resources = [
+      aws_s3_bucket.public_assets.arn,       # buckerそのものへのアクセス
+      "${aws_s3_bucket.public_assets.arn}/*" # bucket内のオブジェクトへのアクセス
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values   = [aws_cloudfront_distribution.asset.arn]
+    }
+  }
 }
 resource "aws_s3_bucket_lifecycle_configuration" "public_assets_lifecycle" {
   bucket = aws_s3_bucket.public_assets.id

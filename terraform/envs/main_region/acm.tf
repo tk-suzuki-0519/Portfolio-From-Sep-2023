@@ -2,6 +2,7 @@
 # acm
 # -----------------------------------
 resource "aws_acm_certificate" "main_region_cert" {
+  provider                  = aws.virginia
   domain_name               = var.main_domain
   subject_alternative_names = [format("www.%s", var.main_domain)]
   validation_method         = "DNS"
@@ -14,7 +15,7 @@ resource "aws_acm_certificate" "main_region_cert" {
   }
 }
 resource "aws_acm_certificate_validation" "cert_valid" {
-  certificate_arn = aws_acm_certificate.main_region_cert.arn
+  certificate_arn         = aws_acm_certificate.main_region_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_valid : record.fqdn]
 }
 resource "aws_route53_record" "cert_valid" {
