@@ -15,7 +15,7 @@ resource "aws_cloudfront_distribution" "asset" {
   }
   # オリジン設定/ALB
   origin {
-    domain_name = var.main_domain
+    domain_name = format("www_%s", var.main_domain)
     origin_id   = aws_lb.alb.id
     custom_origin_config {
       http_port                = 80
@@ -77,12 +77,10 @@ resource "aws_cloudfront_distribution" "asset" {
   }
   # 証明書
   viewer_certificate {
-    cloudfront_default_certificate = true
-    /*
-    # acm_certificate_arn            = var.
-    minimum_protocol_version = "TLSv1.2_2021"
-    ssl_support_method       = "sni-only"
-*/
+    cloudfront_default_certificate = false
+    acm_certificate_arn            = aws_acm_certificate.main_region_cert.arn
+    minimum_protocol_version       = "TLSv1.2_2021"
+    ssl_support_method             = "sni-only"
   }
 }
 
