@@ -2,6 +2,7 @@
 # acm
 # -----------------------------------
 resource "aws_acm_certificate" "main_region_cert" {
+  provider                  = aws.virginia
   domain_name               = var.main_domain
   subject_alternative_names = [format("www.%s", var.main_domain)]
   validation_method         = "DNS"
